@@ -23,7 +23,8 @@ function tfrstft(x,t=NaN,N=NaN,f=NaN,h=NaN,nwindow=4,silent=0,use_nufft=true)
         # tfr(indices,icol)=x(ti+tau,1).*conj(h(Lh+1+tau));
         taumin=-minimum([floor(N/2)-1,Lh,ti-1])
         taumax=minimum([floor(N/2)-1,Lh,xrow-ti])
-        tau=round(Int64,taumin:taumax); indices=round(Int64,rem(N+tau,N)+1)
+        tau=round(Int64,taumin:taumax)
+        indices=round(Int64,rem(N+tau,N)+1)
         tfr[indices,icol] = x[ti+tau].*conj(h[Lh+1+tau])
     end
 
