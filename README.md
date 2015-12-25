@@ -26,11 +26,13 @@ Planned
 - smoothed pseudo Wigner-Ville distribution
 - polynomial WV (possibly)
 
+Gallery
+------------------------
 
 - Wigner-Ville
 
 <img src="./figure/wv.png" Titie="explanation">
 
--Pseudo Wigner Ville
+- Pseudo Wigner Ville
 
 <img src="./figure/pwv.png" Titie="explanation">
