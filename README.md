@@ -7,20 +7,19 @@ Julia codes for Cohen's class distribution. Currently, it's almost nothing excep
 
 Requirement
 ----------------------
--Julia v0.4
+- Julia v0.4
 
-
-Required Julia Packages
+Julia Packages 
 ------------------------
--DSP
--IJulia, Winston, Color (just for showing a sample)
+- DSP
+- IJulia, Winston, Color (just for showing a sample)
 
-Currently available 
+Available 
 ------------------------
 
 - Wigner-Ville distribution
 
-Planned algorithm
+Planned 
 ------------------------
 
 - pseudo Wigner-Ville distribution
