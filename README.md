@@ -18,10 +18,10 @@ Available
 ------------------------
 
 - Wigner-Ville distribution
+- Pseudo Wigner-Ville distribution
 
 Planned 
 ------------------------
 
-- pseudo Wigner-Ville distribution
 - smoothed pseudo Wigner-Ville distribution
 - polynomial WV (possibly)

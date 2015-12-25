@@ -1,6 +1,5 @@
 module cohenclass
-function tfrwv(x,t=NaN,N=NaN)
-    #   This code was translated to this Julia code from MATLAB GPL programs, tftb-0.2.
+    #   These function were translated to this Julia code from MATLAB GPL programs, tftb-0.2.
     #   Licence is GPL v0.2 see License for the detail
     #   This program is free software; you can redistribute it and/or modify
     #   it under the terms of the GNU General Public License as published by
@@ -12,6 +11,7 @@ function tfrwv(x,t=NaN,N=NaN)
     #
     #   Copyright (c) Hajime Kawahara (2015)
 
+function tfrwv(x,t=NaN,N=NaN)
     xcol,xrow = size(x) #xcol for cross-rwv
     if isnan(t) t=(1:xrow)' end
     if isnan(N) N=xrow end
@@ -48,16 +48,69 @@ function tfrwv(x,t=NaN,N=NaN)
 
     return tfr
 end
-end
-#include("sampledata.jl")
-#import sampledata
-#import DSP
 
-#y=[1.,2.,3.,5.]
-#x,y=sampledata.genfm(128)
+function tfrpwv(x,t=NaN,N=NaN,h=NaN)
+    xcol,xrow = size(x) #xcol for cross-rwv
+    if isnan(t) t=(1:xrow)' end
+    if isnan(N) N=xrow end
+    if isnan(h) 
+        hlength=floor(N/4)
+        hlength=hlength+1-rem(hlength,2)
+        h=0.54 - 0.46*cos(2.0*pi*(1:hlength)'/(hlength+1)) #Hamming
+    end
+    
+    hcol,hrow=size(h)
+    Lh=round(Int,(hrow-1)/2)
+    h=h/h[Lh+1]
+
+    if hcol!=1 || rem(hrow,2)==0
+        println("H must be a smoothing window with odd length")
+        exit()
+    end
+
+    #information
+    println("Sizes of x and t")
+    println(size(x))
+    println(size(t))
+
+    #error handling
+    if N<0; println("N must be greater than zero"); exit(); end
+    if xcol==0 || xcol>2; println("X must have one or two columns"); exit() end
+    if xcol==1; println("pseudo Wigner Ville"); end
+    if xcol==2; println("Cross pseudo Wigner Ville"); end
+    if nextpow2(N)!=N; println("For a faster computation, N should be a power of two\n"); end
+
+    tfr=zeros(Complex64,N,N) # plane by default
+
+    for icol=1:N
+        ti=t[icol]
+        taumax=minimum([ti-1,xrow-ti,round(N/2)-1,Lh])
+        tau=round(Int64,-taumax:taumax); indices=round(Int64,rem(N+tau,N)+1)
+        tfr[indices,icol] = h[Lh+1+tau]'.*x[1,ti+tau].*conj(x[xcol,ti-tau])
+#        tfr[indices,icol] = x[1,ti+tau].*conj(x[xcol,ti-tau])
+
+        tau=round(N/2); 
+        if ti<=xrow-tau && ti>=tau+1 && tau<=Lh
+            tfr[tau+1,icol] = 0.5*(h[Lh+1+tau]*x[1,ti+tau]*conj(x[xcol,ti-tau]) + h[Lh+1-tau]*x[1,ti-tau]*conj(x[xcol,ti+tau]))
+        end
+    end
+    for i=1:N
+        tfr[:,i]=fft(tfr[:,i])
+    end
+    if xcol==1
+        tfr=real(tfr)
+    end
+
+    return tfr
+end
+
+end
+
+#import DSP
+#y=[1.,2.,3.,5.,1.,2.,3.,5.,1.,2.,3.,5.,1.,2.,3.,5.]
 #ya=DSP.Util.hilbert(y) # transpose is necessary 
 #y=conj(ya')
-
+#tfr=tfrpwv(y)
 #tfr=tfrwv(y)
 #println(real(tfr))
 
