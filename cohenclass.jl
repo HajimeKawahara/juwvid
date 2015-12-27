@@ -110,6 +110,7 @@ end
 #y=[1.,2.,3.,5.,1.,2.,3.,5.,1.,2.,3.,5.,1.,2.,3.,5.]
 #ya=DSP.Util.hilbert(y) # transpose is necessary 
 #y=conj(ya')
+#tfr=tfr4powv(y)
 #tfr=tfrpwv(y)
 #tfr=tfrwv(y)
 #println(real(tfr))
