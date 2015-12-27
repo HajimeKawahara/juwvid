@@ -1,6 +1,9 @@
 module polywv
 
+##### DO NOT WORKING YET ####
+
 function tfr4powv(x,t=NaN,N=NaN)
+    println("DON'T USE !!! DO NOT WORKING YET.")
     #fourth order polinomial
     xcol,xrow = size(x) #xcol for cross-rwv
     if isnan(t) t=(1:xrow)' end
