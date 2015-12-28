@@ -68,9 +68,9 @@ function tfrpwv(x,t=NaN,N=NaN,h=NaN,silent=0)
     end
 
     #information
-    println("Sizes of x and t")
-    println(size(x))
-    println(size(t))
+#    println("Sizes of x and t")
+#    println(size(x))
+#    println(size(t))
 
     #error handling
     if N<0; println("N must be greater than zero"); exit(); end
