@@ -18,12 +18,12 @@ Available
 ------------------------
 
 - Wigner-Ville distribution
+- Cross Wigner-Ville distribution
 - Pseudo Wigner-Ville distribution
 
 Planned 
 ------------------------
 
-- smoothed pseudo Wigner-Ville distribution
 - polynomial WV (possibly)
 
 Gallery

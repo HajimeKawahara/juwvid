@@ -11,21 +11,20 @@ module cohenclass
     #
     #   Copyright (c) Hajime Kawahara (2015)
 
-function tfrwv(x,t=NaN,N=NaN)
+function tfrwv(x,t=NaN,N=NaN,silent=0)
     xcol,xrow = size(x) #xcol for cross-rwv
     if isnan(t) t=(1:xrow)' end
     if isnan(N) N=xrow end
     #information
-    println("Sizes of x and t")
-    println(size(x))
-    println(size(t))
-
+#    println("Sizes of x and t")
+#    println(size(x))
+#    println(size(t))
     #error handling
     if N<0; println("N must be greater than zero"); exit(); end
     if xcol==0 || xcol>2; println("X must have one or two columns"); exit() end
-    if xcol==1; println("Single Wigner Ville"); end
-    if xcol==2; println("Cross Wigner Ville"); end
-    if nextpow2(N)!=N; println("For a faster computation, N should be a power of two\n"); end
+    if xcol==1 && silent ==0 ; println("Single Wigner Ville"); end
+    if xcol==2 && silent ==0 ; println("Cross Wigner Ville"); end
+    if nextpow2(N)!=N && silent ==0 ; println("For a faster computation, N should be a power of two\n"); end
 
     tfr=zeros(Complex64,N,N) # plane by default
 
@@ -49,7 +48,7 @@ function tfrwv(x,t=NaN,N=NaN)
     return tfr
 end
 
-function tfrpwv(x,t=NaN,N=NaN,h=NaN)
+function tfrpwv(x,t=NaN,N=NaN,h=NaN,silent=0)
     xcol,xrow = size(x) #xcol for cross-rwv
     if isnan(t) t=(1:xrow)' end
     if isnan(N) N=xrow end
@@ -76,9 +75,9 @@ function tfrpwv(x,t=NaN,N=NaN,h=NaN)
     #error handling
     if N<0; println("N must be greater than zero"); exit(); end
     if xcol==0 || xcol>2; println("X must have one or two columns"); exit() end
-    if xcol==1; println("pseudo Wigner Ville"); end
-    if xcol==2; println("Cross pseudo Wigner Ville"); end
-    if nextpow2(N)!=N; println("For a faster computation, N should be a power of two\n"); end
+    if xcol==1 && silent ==0 ; println("pseudo Wigner Ville"); end
+    if xcol==2 && silent ==0 ; println("Cross pseudo Wigner Ville"); end
+    if nextpow2(N)!=N && silent ==0 ; println("For a faster computation, N should be a power of two\n"); end
 
     tfr=zeros(Complex64,N,N) # plane by default
 
