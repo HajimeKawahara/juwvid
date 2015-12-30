@@ -15,12 +15,12 @@ function tfrwv(x,y=NaN,t=NaN,N=NaN,silent=0)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
-    if isnan(y)[1] && silent ==0 
-        println("Single Wigner Ville")
+    if isnan(y)[1]
+        if silent ==0  println("Single Wigner Ville") end
         y=x
         sw=0
-    else
-        println("Cross Wigner Ville")
+    else 
+        if silent==0 println("Cross Wigner Ville") end
         sw=1
     end
     tfr=zeros(Complex64,N,N) # plane by default
@@ -58,12 +58,12 @@ function tfrpwv(x,y=NaN,t=NaN,N=NaN,h=NaN,silent=0)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
-    if isnan(y)[1] && silent ==0 
-        println("Single pseudo Wigner Ville")
+    if isnan(y)[1] 
+        if silent ==0 println("Single pseudo Wigner Ville") end
         y=x
         sw=0
     else
-        println("Cross pseudo Wigner Ville")
+        if silent ==0 println("Cross pseudo Wigner Ville") end
         sw=1
     end
     if isnan(h)[1] 
