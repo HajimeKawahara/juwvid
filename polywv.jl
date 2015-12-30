@@ -1,9 +1,12 @@
 module polywv
-
+import Interpolations
 ##### DO NOT WORKING YET ####
-function tfr6powv(x,t=NaN,N=NaN,silent=0)
+# Chandra Sekhar and Sreenivas 02
+
+function tfrpowv(x,t=NaN,N=NaN,silent=0)
     println("DON'T USE !!! DO NOT WORKING YET.")
-    #fourth order polinomial
+    #f :frequency array
+    # the six-order polynomial q=6
     xcol,xrow = size(x) #xcol for cross-rwv
     if isnan(t) t=(1:xrow)' end
     if isnan(N) N=xrow end
@@ -15,22 +18,28 @@ function tfr6powv(x,t=NaN,N=NaN,silent=0)
     #error handling
     if N<0; println("N must be greater than zero"); exit(); end
     if xcol==0 || xcol>2; println("X must have one or two columns"); exit() end
-    if xcol==1 && silent==0; println("Single Wigner Ville"); end
-    if xcol==2 && silent==0; println("Cross Wigner Ville"); end
-    if nextpow2(N)!=N; println("For a faster computation, N should be a power of two\n"); end
+    if xcol==1 && silent==0; println("Single q=6 polynomial Wigner Ville"); end
+    if xcol==2 && silent==0; println("Cross  q=6 polynomial Wigner Ville"); end
 
     tfr=zeros(Complex64,N,N) # plane by default
+    d1=0.675
+    d2=0.85
+    #interpolation
+    za = Interpolations.interpolate((t,),x[1,:], Interpolations.Gridded(Interpolations.Linear()));
+    zb = Interpolations.interpolate((t,),x[xcol,:], Interpolations.Gridded(Interpolations.Linear()));
+
+    tau = 1/0.675
+    M=N
 
     for icol=1:N
         ti=t[icol]
-        taumax=minimum([ti-1,xrow-ti,round(N/4)-1])
-        tau=round(Int64,-taumax:taumax); indices=round(Int64,rem(N+tau,N)+1)
-        tfr[indices,icol] = x[1,ti+tau].*conj(x[xcol,ti-tau]).*x[1,ti+tau].*conj(x[xcol,ti-tau]) #                
-#        tau=round(N/4); 
-#        if ti<=xrow-tau && ti>=tau+1
-#            tfr[tau+1,icol] = 0.5*(x[1,ti+tau]^2*conj(x[xcol,ti-tau])^2 + x[1,ti-tau]^2*conj(x[xcol,ti+tau]^2))
-#        end
+        for mrow=1:M                        
+            if ti+d2*m*tau <= t[end] && ti-d1*m*tau > 0
+                tfr[mrow,icol] = za[ti+d1*m*tau].*zb[ti+d1*m*tau].*conj(zb[ti-d1*m*tau]).*conj(zb[ti-d1*m*tau]).*conj(zb[ti+d2*m*tau]).*zb[ti-d2*m*tau] #                
+            end
+        end
     end
+
     for i=1:N
         tfr[:,i]=fft(tfr[:,i])
     end
@@ -42,12 +51,10 @@ function tfr6powv(x,t=NaN,N=NaN,silent=0)
 
     return tfr
 end
-
 end
 
-#import DSP
-#y=[1.,2.,3.,5.,1.,2.,3.,5.,1.,2.,3.,5.,1.,2.,3.,5.]
-#ya=DSP.Util.hilbert(y) # transpose is necessary 
-#y=conj(ya')
-#tfr=polywv.tfr4powv(y)
-#println(real(tfr))
+import DSP
+y=linspace(0.0,512.0,512)
+ya=DSP.Util.hilbert(y) # transpose is necessary 
+y=conj(ya')
+tfr=polywv.tfrpowv(y)

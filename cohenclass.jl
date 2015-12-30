@@ -32,12 +32,22 @@ function tfrwv(x,t=NaN,N=NaN,silent=0)
         ti=t[icol]
         taumax=minimum([ti-1,xrow-ti,round(N/2)-1])
         tau=round(Int64,-taumax:taumax); indices=round(Int64,rem(N+tau,N)+1)
+#        println("-------")
+#        println("ti",ti)
+#        println("indices",indices)
+#        println("ti+tau",ti+tau)
+#        println("ti-tau",ti-tau)
         tfr[indices,icol] = x[1,ti+tau].*conj(x[xcol,ti-tau]) #                
+#        println("--")
         tau=round(N/2); 
         if ti<=xrow-tau && ti>=tau+1
+ #           println("index",tau+1)
+ #           println("ti+tau",ti+tau)
+ #           println("ti-tau",ti-tau)
             tfr[tau+1,icol] = 0.5*(x[1,ti+tau]*conj(x[xcol,ti-tau]) + x[1,ti-tau]*conj(x[xcol,ti+tau]))
         end
     end
+    ############
     for i=1:N
         tfr[:,i]=fft(tfr[:,i])
     end
@@ -106,11 +116,10 @@ end
 end
 
 #import DSP
-#y=[1.,2.,3.,5.,1.,2.,3.,5.,1.,2.,3.,5.,1.,2.,3.,5.]
+#y=[1.,2.,3.,5.,1.,2.,3.,5.]
 #ya=DSP.Util.hilbert(y) # transpose is necessary 
 #y=conj(ya')
-#tfr=tfr4powv(y)
 #tfr=tfrpwv(y)
-#tfr=tfrwv(y)
+#tfr=cohenclass.tfrwv(y)
 #println(real(tfr))
 
