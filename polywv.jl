@@ -1,14 +1,14 @@
 module polywv
-import Interpolations
 ##### DO NOT WORKING YET ####
 # Chandra Sekhar and Sreenivas 02
+import Interpolations
 
 function tfrpowv(x,t=NaN,N=NaN,silent=0)
     println("DON'T USE !!! DO NOT WORKING YET.")
     #f :frequency array
     # the six-order polynomial q=6
     xcol,xrow = size(x) #xcol for cross-rwv
-    if isnan(t) t=(1:xrow)' end
+    if isnan(t) t=(1:xrow) end
     if isnan(N) N=xrow end
     #information
 #    println("Sizes of x and t")
@@ -25,8 +25,11 @@ function tfrpowv(x,t=NaN,N=NaN,silent=0)
     d1=0.675
     d2=0.85
     #interpolation
-    za = Interpolations.interpolate((t,),x[1,:], Interpolations.Gridded(Interpolations.Linear()));
-    zb = Interpolations.interpolate((t,),x[xcol,:], Interpolations.Gridded(Interpolations.Linear()));
+    println(size(x[1,:]))
+    println(size(x[1,:]'[:,1]))
+
+    za = Interpolations.interpolate((t,),x[1,:]'[:,1], Interpolations.Gridded(Interpolations.Linear()));
+    zb = Interpolations.interpolate((t,),x[xcol,:]'[:,1], Interpolations.Gridded(Interpolations.Linear()));
 
     tau = 1/0.675
     M=N
@@ -34,8 +37,8 @@ function tfrpowv(x,t=NaN,N=NaN,silent=0)
     for icol=1:N
         ti=t[icol]
         for mrow=1:M                        
-            if ti+d2*m*tau <= t[end] && ti-d1*m*tau > 0
-                tfr[mrow,icol] = za[ti+d1*m*tau].*zb[ti+d1*m*tau].*conj(zb[ti-d1*m*tau]).*conj(zb[ti-d1*m*tau]).*conj(zb[ti+d2*m*tau]).*zb[ti-d2*m*tau] #                
+            if ti+d2*mrow*tau <= t[end] && ti-d1*mrow*tau > 0
+                tfr[mrow,icol] = za[ti+d1*mrow*tau].*zb[ti+d1*mrow*tau].*conj(zb[ti-d1*mrow*tau]).*conj(zb[ti-d1*mrow*tau]).*conj(zb[ti+d2*mrow*tau]).*zb[ti-d2*mrow*tau] #                
             end
         end
     end
