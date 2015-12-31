@@ -28,18 +28,14 @@ function tfrwv(x,y=NaN,t=NaN,N=NaN,silent=0)
         ti=t[icol]
         taumax=minimum([ti-1,xrow-ti,round(N/2)-1])
         tau=round(Int64,-taumax:taumax); indices=round(Int64,rem(N+tau,N)+1)
-#        println("-------")
-#        println("ti",ti)
-#        println("indices",indices)
-#        println("ti+tau",ti+tau)
-#        println("ti-tau",ti-tau)
         tfr[indices,icol] = x[ti+tau].*conj(y[ti-tau]) #                
-#        println("--")
+#        for i in 1:length(indices)
+#            ii=indices[i]
+#            println(ii,"   ",x[ti+tau[i]].*conj(y[ti-tau[i]]))
+#        end
+#        println(fft(tfr[:,icol]))
         tau=round(N/2); 
         if ti<=xrow-tau && ti>=tau+1
- #           println("index",tau+1)
- #           println("ti+tau",ti+tau)
- #           println("ti-tau",ti-tau)
             tfr[tau+1,icol] = 0.5*(x[ti+tau]*conj(y[ti-tau]) + x[ti-tau]*conj(y[ti+tau]))
         end
     end
@@ -100,9 +96,9 @@ end
 end
 
 #import DSP
-#y=[1.,2.,3.,5.,1.,2.,3.,5.]
+#y=linspace(0.0,16.0,16)
 #z=DSP.Util.hilbert(y)
-#tfr=cohenclass.tfrwv(z,z)
+#tfr=cohenclass.tfrwv(z)
 ##tfr=cohenclass.tfrpwv(z)
 #println(real(tfr))
 
