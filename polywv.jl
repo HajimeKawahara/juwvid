@@ -28,23 +28,25 @@ function tfrpowv(x,y=NaN,t=NaN,N=NaN,silent=0)
     d2=0.85
     #interpolation
 
-#    tau = 1/0.675
-    tau = 1/0.85
+#    tau = 1/d2
+    tau = 1/d1
+
 #    tau=0.1
     M=N
     tfr=zeros(Complex64,M,M) # plane by default
 
     for icol=1:N
         ti=t[icol]
-#        println("---",icol)
         taumax=minimum([ti-1,N-ti,round(N/2)-1])
-#        taumax=round(Int,minimum([ti-1,N-ti,round(N/2)-1])*2)
+        taumax=round(Int,taumax*d2/tau)
+        taumax=minimum([taumax,N])
+        taumax=maximum([taumax,1])
+
+#        println("--",icol,"--",taumax)
         for mrow=-taumax:taumax
-#            if ti+d2*mrow*tau <= t[end] && ti-d2*mrow*tau >= 1                
-                mrowx=round(Int64,rem(N+mrow,N)+1)
-                tfr[mrowx,icol] = xi[ti+d1*mrow*tau].*yi[ti+d1*mrow*tau].*conj(yi[ti-d1*mrow*tau]).*conj(yi[ti-d1*mrow*tau]).*conj(yi[ti+d2*mrow*tau]).*yi[ti-d2*mrow*tau]
-                #            println(mrowx,"  ",mrow,"   ",tfr[mrowx,icol])
-#            end
+            mrowx=round(Int64,rem(N+mrow,N)+1)
+#            println(mrowx," ",mrow," ",ti+d2*mrow*tau," ",t[end]," ",ti-d2*mrow*tau," ",1)
+            tfr[mrowx,icol] = xi[ti+d1*mrow*tau].*yi[ti+d1*mrow*tau].*conj(yi[ti-d1*mrow*tau]).*conj(yi[ti-d1*mrow*tau]).*conj(yi[ti+d2*mrow*tau]).*yi[ti-d2*mrow*tau]
         end
     end
 

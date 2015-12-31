@@ -26,7 +26,7 @@ function ifestxpvwd(z,ynorm,dx,niter)
     return indfn
 end
 
-function ifestxpowv(z,ynorm,dx,niter)
+function ifestxpowv(z,ynorm,dx,niter, tfrsw=false)
     tfrn=polywv.tfrpowv(z,NaN,NaN,NaN,1)
     indfn=extif.maxif(real(tfrn))
     for it=1:niter        
@@ -35,7 +35,11 @@ function ifestxpowv(z,ynorm,dx,niter)
         indfn=extif.maxif(abs(tfrn))
     end
 
-    return indfn
+    if tfrsw
+        return indfn, tfrn
+    else
+        return indfn
+    end
 end
 
 end
