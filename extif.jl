@@ -12,12 +12,16 @@ function maxif(tfr)
     return indf
 end
 
-function aveif(tfr)
+function aveif(tfr,isf=NaN,ief=NaN)
     nf,nt=size(tfr)
+    if isnan(isf) isf=1 end 
+    if isnan(ief) ief=nf end 
+    
+    nnf=ief-isf+1
     indf=zeros(nt)
-    ifreq=1:nf
+    ifreq=collect(isf:ief)
     for it=1:nt
-        i=sum(ifreq[:].*tfr[:,it])/sum(tfr[:,it])
+        i=sum(ifreq[:].*tfr[isf:ief,it])/sum(tfr[isf:ief,it])
         indf[it]=i
     end 
     
