@@ -30,5 +30,5 @@ Pkg.add("DSP")
 
 ## Sample
 
-<script src="https://gist.github.com/HajimeKawahara/398c99cdcd9863c8a8d9.js"></script>
+See https://gist.github.com/HajimeKawahara/398c99cdcd9863c8a8d9
 
