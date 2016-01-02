@@ -1,6 +1,7 @@
 module cohenclass
-#   These function were translated to this Julia code from MATLAB GPL programs, tftb-0.2.
-#   Licence is GPL v0.2 see License for the detail
+#   These functions were imported from MATLAB GPL programs,tftb-0.2
+#   and were modified by HK.
+#   Licence is GPL v2 see License for the detail
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
