@@ -28,7 +28,7 @@ Pkg.add("DSP")
 - Short-time Fourier Transform
 - polynomial WV (under development)
 
-## Sample
+## Examples
 
-See https://gist.github.com/HajimeKawahara/02bf910c686f66112144
+Visit https://gist.github.com/HajimeKawahara/02bf910c686f66112144
 
