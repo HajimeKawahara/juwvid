@@ -1,5 +1,6 @@
 module cohenclass
 
+
 function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
