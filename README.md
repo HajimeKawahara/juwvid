@@ -30,5 +30,5 @@ Pkg.add("DSP")
 
 ## Sample
 
-See https://gist.github.com/HajimeKawahara/398c99cdcd9863c8a8d9
+See https://gist.github.com/HajimeKawahara/02bf910c686f66112144
 

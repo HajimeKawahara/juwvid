@@ -1,6 +1,6 @@
 module cohenclass
 
-function tfrwv(x,y=NaN,t=NaN,N=NaN,silent=0)
+function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
@@ -18,28 +18,43 @@ function tfrwv(x,y=NaN,t=NaN,N=NaN,silent=0)
         taumax=minimum([ti-1,xrow-ti,round(N/2)-1])
         tau=round(Int64,-taumax:taumax); indices=round(Int64,rem(N+tau,N)+1)
         tfr[indices,icol] = x[ti+tau].*conj(y[ti-tau]) #                
-#        for i in 1:length(indices)
-#            ii=indices[i]
-#            println(ii,"   ",x[ti+tau[i]].*conj(y[ti-tau[i]]))
-#        end
-#        println(fft(tfr[:,icol]))
         tau=round(N/2); 
         if ti<=xrow-tau && ti>=tau+1
             tfr[tau+1,icol] = 0.5*(x[ti+tau]*conj(y[ti-tau]) + x[ti-tau]*conj(y[ti+tau]))
         end
     end
-    ############
-    for i=1:N
-        tfr[:,i]=fft(tfr[:,i])
-    end
-    if sw==0
-        tfr=real(tfr)
+
+    ###Choose FFT or DFT
+    if isnan(f)[1]
+        for i=1:N
+            tfr[:,i]=fft(tfr[:,i])
+        end
+        return tfr
+    else
+        Nf=size(f)[1]
+        m=collect(1:N)
+        tfrnew=zeros(Complex64,Nf,N)        
+        for i=1:N
+            for j=1:Nf                
+                tfrnew[j,i]=sum(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
+            end            
+        end
+        return tfrnew
     end
 
-    return tfr
+    #--check--
+    #for i=1:N
+    #    tfr[:,i]=fft(tfr[:,i])
+    #end
+    #for i=1:N
+    #    for j=1:Nf                
+    #        println(j,"-",i," fft:",tfr[j,i]," dft:",tfrnew[j,i])
+    #    end
+    #end
+
 end
 
-function tfrpwv(x,y=NaN,t=NaN,N=NaN,h=NaN,silent=0)
+function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
@@ -72,11 +87,22 @@ function tfrpwv(x,y=NaN,t=NaN,N=NaN,h=NaN,silent=0)
             tfr[tau+1,icol] = 0.5*(h[Lh+1+tau]*x[ti+tau]*conj(y[ti-tau]) + h[Lh+1-tau]*x[ti-tau]*conj(y[ti+tau]))
         end
     end
-    for i=1:N
-        tfr[:,i]=fft(tfr[:,i])
-    end
-    if sw==0
-        tfr=real(tfr)
+
+    if isnan(f)[1]
+        for i=1:N
+            tfr[:,i]=fft(tfr[:,i])
+        end
+        return tfr
+    else
+        Nf=size(f)[1]
+        m=collect(1:N)
+        tfrnew=zeros(Complex64,Nf,N) 
+        for i=1:N
+            for j=1:Nf                
+                tfrnew[j,i]=sum(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
+            end            
+        end
+        return tfrnew
     end
 
     return tfr
@@ -88,6 +114,8 @@ end
 #y=linspace(0.0,16.0,16)
 #z=DSP.Util.hilbert(y)
 #tfr=cohenclass.tfrwv(z)
+#nsample=16
+#tfr=cohenclass.tfrwv(z,NaN,NaN,[1,2],NaN,0)
 ##tfr=cohenclass.tfrpwv(z)
-#println(real(tfr))
+#println(tfr)
 
