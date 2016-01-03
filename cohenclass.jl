@@ -1,16 +1,4 @@
 module cohenclass
-#   These functions were imported from MATLAB GPL programs,tftb-0.2
-#   and were modified by HK.
-#   Licence is GPL v2 see License for the detail
-#   This program is free software; you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation; either version 2 of the License, or
-#   (at your option) any later version.
-#    
-#   Original tftb MATLAB code was written by F. Auger, May-August 1994, July 1995.
-#	Regarding tftb, vist http://tftb.nongnu.org/ . 
-#
-#   Copyright (c) Hajime Kawahara (2015)
 
 function tfrwv(x,y=NaN,t=NaN,N=NaN,silent=0)
     xrow = size(x)[1] 

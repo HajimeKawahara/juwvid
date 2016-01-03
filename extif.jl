@@ -1,12 +1,15 @@
 module extif
 #extract instant frequency
 
-function maxif(tfr)
+function maxif(tfr,isf=NaN,ief=NaN)
     nf,nt=size(tfr)
+    if isnan(isf) isf=1 end 
+    if isnan(ief) ief=nf end 
     indf=zeros(nt)
+    ifreq=collect(isf:ief)
     for it=1:nt
-        i=indmax(tfr[:,it])
-        indf[it]=real(i)
+        i=indmax(tfr[isf:ief,it])
+        indf[it]=real(ifreq[i])
     end 
     
     return indf
@@ -15,9 +18,7 @@ end
 function aveif(tfr,isf=NaN,ief=NaN)
     nf,nt=size(tfr)
     if isnan(isf) isf=1 end 
-    if isnan(ief) ief=nf end 
-    
-    nnf=ief-isf+1
+    if isnan(ief) ief=nf end     
     indf=zeros(nt)
     ifreq=collect(isf:ief)
     for it=1:nt

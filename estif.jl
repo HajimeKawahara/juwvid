@@ -4,13 +4,21 @@ import cohenclass
 import extif
 import polywv
 
-function ifestxvwd(z,ynorm,dx,niter, tfrsw=false)
-    tfrn=cohenclass.tfrwv(z,NaN,NaN,NaN,1)
-    indfn=extif.maxif(real(tfrn))
+function ifestxvwd(z,ynorm,dx,niter,indfn=NaN,isf=NaN,ief=NaN, tfrsw=false)
+    nf=size(z)
+    nt=nf
+    if isnan(isf) isf=1 end 
+    if isnan(ief) ief=nf end 
+
+    if isnan(indfn[1])
+        tfrn=cohenclass.tfrwv(z,NaN,NaN,NaN,1)
+        indfn=extif.maxif(real(tfrn))
+    end
+
     for it=1:niter        
         zhat=exp(im*cumsum(indfn)*ynorm*dx)
         tfrn=cohenclass.tfrwv(z,zhat,NaN,NaN,1)
-        indfn=extif.maxif(abs(tfrn))
+        indfn=extif.maxif(abs(tfrn),isf,isf)
     end
     if tfrsw
         return indfn, tfrn
