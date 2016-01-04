@@ -53,11 +53,10 @@ function next235(base,limit=10^12)
     return nextv, p, q, r
 end
 
-function nufft1d2(nj,ms,xj,fk0,iflag=-1,eps=1.e24)
-    #fw 0:iwtot -> + 1
+function nufft1d2(nj,M,xj,fk,iflag=-1,eps=1.e-24)
+    #fw 0:iwtot -> + 1 real
     #fk use getl
-    # xc use getl
-
+    #xc use getl
     nxc=147*2+1
     xc=zeros(nxc)
 
@@ -74,7 +73,7 @@ function nufft1d2(nj,ms,xj,fk0,iflag=-1,eps=1.e24)
     nf1 = ratio*M
     if 2*nspread > nf1 nf1,p1,q1,r1 = next235(2*nspread) end 
 
-    r2lamb = ratio*ratio*nspread/(ratio*(ratio - 0.5))
+    rrlamb = ratio*ratio*nspread/(ratio*(ratio - 0.5))
     hx = 2*pi/nf1
 
 
@@ -86,56 +85,62 @@ function nufft1d2(nj,ms,xj,fk0,iflag=-1,eps=1.e24)
     iwsav = iw1 + nspread + 1
     iwtot = iwsav + 4*nf1 + 15    
 #    allocate ( fw(0:iwtot))
-    fw=zeros(Complex64,iwtot+1) #fw: i->i+1
+    fw=zeros(Real,iwtot+1) #fw: i->i+1
 
-    t1 = pi/r2lamb
+    t1 = pi/rrlamb
     for k1 = 1:nspread
         fw[iw1+k1+1] = exp(-t1*k1^2)
     end
 #    call zffti(nf1,fw(iwsav))
-
 #
 #     ---------------------------------------------------------------
 #     Deconvolve and compute inverse 1D FFT
 #     (A factor of (-1)**k is needed to shift phase.)
 #     ---------------------------------------------------------------
 #
-    t1 = pi*r2lamb/nf1^2
-    cross1 = 1.0/sqrt(r2lamb)
+    t1 = pi*rrlamb/nf1^2
+    cross1 = 1.0/sqrt(rrlamb)
     zz = cross1*fk[1]
     fw[1] = real(zz)
     fw[2] = imag(zz)
-    for k1=1:(ms-1)/2
+    for k1=1:(M-1)/2
         cross1 = -cross1
-        cross = cross1*exp(t1*k1^2)
-        zz = cross*fk[k1+1]
-        fw[2*k1+1] = real(zz)
-        fw[2*k1+2] = imag(zz)
-
-        l=getl(-k1,ms)
-        zz = cross*fk[j]
-
-        l=getl(2*(nf1-k1),ms)
+        cross = cross1*exp(t1*k1^2)        
+        zz = cross*fk[round(Int,k1+1)]
+        fw[round(Int,2*k1+1)] = real(zz)
+        fw[round(Int,2*k1+2)] = imag(zz)
+        l=getl(-k1,M)
+        println(l)
+        zz = cross*fk[l]
+        l=getl(2*(nf1-k1),M)
         fw[l] = real(zz)
-        l=getl(2*(nf1-k1)+1,ms)
+        l=getl(2*(nf1-k1)+1,M)
         fw[l] = imag(zz)
     end
-    cross = -cross1*exp(t1*(ms/2)^2)
-    if ms == nextpow2(ms)
-        l=getl(-ms/2,ms)
+    cross = -cross1*exp(t1*(M/2)^2)
+    if M == nextpow2(M)
+        l=getl(-M/2,M)
 	zz = cross*fk[l]
-        l=getl(2*nf1-ms,ms)
+        l=getl(2*nf1-M,M)
         fw[l] = real(zz)
-        l=getl(2*nf1-ms+1,ms)
+        l=getl(2*nf1-M+1,M)
         fw[l] = imag(zz)
     end
-    for k1=(ms+1)/2:nf1-ms/2-1
-        fw[2*k1+1] = 0.0+0.0im
-        fw[2*k1+2] = 0.0+0.0im
+    for k1=(M+1)/2:nf1-M/2-1
+        fw[round(Int,2*k1+1)] = 0.0
+        fw[round(Int,2*k1+2)] = 0.0
     end
     
       #complex fft
-    fw=fft(fw)
+    ffw=fft(fw[1:2*M])
+
+    fw[1]=0.0
+    fw[2]=0.0
+    for k1=1:M-1        
+        fw[round(Int,2*k1+1)] = real(ffw[k1])
+        fw[round(Int,2*k1+2)] = imag(ffw[k1])
+    end
+
       #call zfftf(nf1,fw(0),fw(iwsav))
 
 #     ---------------------------------------------------------------
@@ -145,23 +150,26 @@ function nufft1d2(nj,ms,xj,fk0,iflag=-1,eps=1.e24)
 #       2. get contributions from regular fine grid to target
 #          locations using Gaussian convolution.
 #     ---------------------------------------------------------------
-    t1 = pi/r2lamb
+    t1 = pi/rrlamb
     cj=zeros(Complex64,nj)
+
     for j = 1:nj
         cj[j] = 0.0+0.0im
-        jb1 = int((xj[j]+pi)/hx)
+        jb1 = round(Int,(xj[j]+pi)/hx)
         diff1 = (xj[j]+pi)/hx - jb1
+#       
         jb1 = rem(jb1, nf1)
         if jb1 < 0; jb1=jb1+nf1 end
         xc[1] = exp(-t1*diff1^2)
         cross = xc[1]
         cross1=exp(2*t1*diff1)
-        for k1 = 1:nspread
+       for k1 = 1:nspread
             cross = cross * cross1
             xc[k1+1] = fw[iw1+k1+1]*cross
         end
         cross = xc[1]
         cross1 = 1.0/cross1
+
         for k1 = 1:nspread-1
             cross = cross * cross1
             l=getl(-k1,nxc)           
@@ -175,16 +183,22 @@ function nufft1d2(nj,ms,xj,fk0,iflag=-1,eps=1.e24)
             l=getl(k1,nxc)
             cj[j] = cj[j] + xc[l]*zz
         end
+#
         for k1 = -jb1d:jb1u
 	    zz = fw[2*(jb1+k1)+1]+fw[2*(jb1+k1)+2]*im
             l=getl(k1,nxc)
-            cj[j] = cj[j] + xc[k1]*zz
+            cj[j] = cj[j] + xc[l]*zz ####
         end
+#
+
         for k1 = jb1u+1:nspread
 	    zz = fw[2*(jb1+k1-nf1)+1]+fw[2*(jb1+k1-nf1)+2]*im
             l=getl(k1,nxc)
-            cj[j] = cj(j) + xc[k1]*zz
+            cj[j] = cj[j] + xc[l]*zz
         end
+        println("-")
+ 
+
     end
     
     return cj
@@ -193,21 +207,21 @@ end
 end
 
 #import DSP
-ms=8
+M=8
 nj=8
 i=1
 xj=zeros(nj)
-fk0=zeros(Complex64,ms)
+fk0=zeros(Complex64,M)
 for i = 1:nj 
-    xj[i] = 2*pi*real(i)/ms
+    xj[i] = 2*pi*real(i)/M
 end
-for j = 1:ms/2
-    fk0[j]= real(j+ms/2)+0.0im
+for j = 1:round(Int,M/2)
+    fk0[j]= real(j+M/2)+0.0im
 end
-for j = ms/2+1:ms
-    fk0[j]= real(j-ms/2)+0.0im
+for j = round(Int,M/2+1):M
+    fk0[j]= real(j-M/2)+0.0im
 end
-cj=nufft.nufft1d2(nj,ms,xj,fk0)
+cj=nufft.nufft1d2(nj,M,xj,fk0)
 println(cj)
 
 ########################################################
