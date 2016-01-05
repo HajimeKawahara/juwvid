@@ -34,13 +34,10 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,use_nufft=true)
         return tfr
     elseif use_nufft
         if silent==0 println("Use nufft.") end
-        Nf=size(f)[1]
-        m=collect(1:N)
-        tfrnew=zeros(Complex64,Nf,N)        
         for i=1:N
-            tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-32)
+            tfr[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-32)
         end
-        return tfrnew
+        return tfr
     else
         if silent==0 println("Use Direct DFT.") end
         Nf=size(f)[1]
