@@ -2,13 +2,13 @@
 
 [![Licence](http://img.shields.io/badge/license-GPLv2-blue.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 
-Julia codes for Cohen's class distribution. Currently, it's under development and functions available are very limited. I imported the Wigner-Ville distribution, the pseudo Wigner-Ville distribution, and the short-time Fourier transfrom from MATLAB GPL programs, tftb-0.2 and modified them. Regarding tftb, visit http://tftb.nongnu.org/ .
+Julia codes for Cohen's class distribution. Currently, it's under development and functions available are very limited. I imported the Wigner-Ville distribution, the pseudo Wigner-Ville distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and modified them. Regarding tftb, visit http://tftb.nongnu.org/ .
 
 ## Requirement
 
 - Julia v0.4
 
-### Julia Packages 
+#### Julia Packages 
 
 - DSP
 - Interpolations (in future)
@@ -19,17 +19,18 @@ To install, use Pkg.add in the julia console, such as
 ```
 Pkg.add("DSP")
 ```
-## Julia Bindings of non-uniform FFT (NUFFT)
 
-The Julia bindings of NUFFT are available (currently only for nufft1d2). The original fortran code of NUFFT is from [CMCL/NUFFT](http://www.cims.nyu.edu/cmcl/nufft/nufft.html) version 1.3.3. The code in the nufft_src directory is BSD licensed and the Julia bindings are GPLv2.
+#### Julia Bindings of non-uniform FFT (NUFFT)
 
-Use Makefile to generate a shared library file, libnufft.so. 
+Juwvid has the Julia bindings of parts of [CMCL/NUFFT](http://www.cims.nyu.edu/cmcl/nufft/nufft.html) version 1.3.3 (but currently only for nufft1d2). The original Fortran code of NUFFT is from [CMCL/NUFFT](http://www.cims.nyu.edu/cmcl/nufft/nufft.html). The source files in the nufft_src directory are BSD licensed, and the Julia bindings are GPLv2.
+
+Edit Makefile and type
 
 ```
 make
 ```
 
-
+to generate a shared library file, libnufft.so. Change the path of ccall in jnufft.jl. 
 
 ## Available 
 
@@ -39,6 +40,7 @@ make
 - Short-time Fourier Transform
 - polynomial WV (under development)
 
+#### Example
 
-
+See [here](https://gist.github.com/HajimeKawahara/7a19851612f9c173de85).
 
