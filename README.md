@@ -19,16 +19,26 @@ To install, use Pkg.add in the julia console, such as
 ```
 Pkg.add("DSP")
 ```
+## Julia Bindings of non-uniform FFT (NUFFT)
+
+The Julia bindings of NUFFT are available (currently only for nufft1d2). The original fortran code of NUFFT is from [CMCL/NUFFT](http://www.cims.nyu.edu/cmcl/nufft/nufft.html) version 1.3.3. The code in the nufft_src directory is BSD licensed and the Julia bindings are GPLv2.
+
+Use Makefile to generate a shared library file, libnufft.so. 
+
+```
+make
+```
+
+
 
 ## Available 
 
-- Wigner-Ville distribution
-- Cross Wigner-Ville distribution
-- Pseudo Wigner-Ville distribution
+- Wigner-Ville distribution (w/ NUFFT)
+- Cross Wigner-Ville distribution  (w/ NUFFT)
+- Pseudo Wigner-Ville distribution (w/ NUFFT)
 - Short-time Fourier Transform
 - polynomial WV (under development)
 
-## Examples
 
-Visit https://gist.github.com/HajimeKawahara/02bf910c686f66112144
+
 
