@@ -35,7 +35,7 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,use_nufft=true)
     elseif use_nufft
         if silent==0 println("Use nufft.") end
         for i=1:N
-            tfr[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-32)
+            tfr[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)
         end
         return tfr
     else
@@ -63,7 +63,7 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,use_nufft=true)
 
 end
 
-function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0)
+function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,use_nufft=true)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
@@ -98,11 +98,19 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0)
     end
 
     if isnan(f)[1]
+        if silent==0 println("Use fft.") end
         for i=1:N
             tfr[:,i]=fft(tfr[:,i])
         end
         return tfr
+    elseif use_nufft
+        if silent==0 println("Use nufft.") end
+        for i=1:N
+            tfr[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)
+        end
+        return tfr
     else
+        if silent==0 println("Use dft.") end
         Nf=size(f)[1]
         m=collect(1:N)
         tfrnew=zeros(Complex64,Nf,N) 
