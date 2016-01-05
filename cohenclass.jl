@@ -1,7 +1,7 @@
 module cohenclass
+import jnufft
 
-
-function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0)
+function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,use_nufft=true)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
@@ -27,11 +27,22 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0)
 
     ###Choose FFT or DFT
     if isnan(f)[1]
+        if silent==0 println("Use fft.") end
         for i=1:N
             tfr[:,i]=fft(tfr[:,i])
         end
         return tfr
+    elseif use_nufft
+        if silent==0 println("Use nufft.") end
+        Nf=size(f)[1]
+        m=collect(1:N)
+        tfrnew=zeros(Complex64,Nf,N)        
+        for i=1:N
+            tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-32)
+        end
+        return tfrnew
     else
+        if silent==0 println("Use Direct DFT.") end
         Nf=size(f)[1]
         m=collect(1:N)
         tfrnew=zeros(Complex64,Nf,N)        
