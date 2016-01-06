@@ -1,10 +1,10 @@
 module polywv
-##### DO NOT WORKING YET ####
 # Chandra Sekhar and Sreenivas 02
 import Interpolations
+import jnufft
 
-function tfrpowv(x,y=NaN,t=NaN,N=NaN,silent=0)
-    println("DON'T USE !!! DO NOT WORKING YET.")
+function tfrpowv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0)
+    if silent ==0 println("DON'T USE !!! DO NOT WORKING YET.") end
     #f :frequency array
     # the six-order polynomial q=6
     xrow = size(x)[1] 
@@ -27,10 +27,8 @@ function tfrpowv(x,y=NaN,t=NaN,N=NaN,silent=0)
     d1=0.675
     d2=0.85
     #interpolation
-
 #    tau = 1/d2
     tau = 1/d1
-
 #    tau=0.1
     M=N
     tfr=zeros(Complex64,M,M) # plane by default
@@ -50,16 +48,22 @@ function tfrpowv(x,y=NaN,t=NaN,N=NaN,silent=0)
         end
     end
 
-    for i=1:N
-        tfr[:,i]=fft(tfr[:,i])
+    if isnan(f)[1]
+        println("Use fft.")
+        for i=1:N
+            tfr[:,i]=fft(tfr[:,i])
+        end
+        return tfr
+    else
+        println("Use nufft.")
+        Nf=size(f)[1]
+        tfrnew=zeros(Complex64,Nf,N) 
+        for i=1:N
+            tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
+        end
+        return tfrnew
     end
-#    println(tfr)
-#    exit()
-#    if sw==0
-#        tfr=real(tfr)
-#    end
 
-    return tfr
 end
 end
 
