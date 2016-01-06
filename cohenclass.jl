@@ -37,9 +37,9 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,use_nufft=true)
         Nf=size(f)[1]
         tfrnew=zeros(Complex64,Nf,N) 
         for i=1:N
-            tfr[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
-        end
-        return tfr
+            tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
+        end        
+        return tfrnew
     else
         if silent==0 println("Use Direct DFT.") end
         Nf=size(f)[1]
