@@ -24,6 +24,21 @@ function tfrpowv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0)
         sw=1
     end
 
+    ########## TEST FOR WINDOW ###############
+#    hlength=floor(N/4)
+#    hlength=hlength+1-rem(hlength,2)
+#    h=0.54 - 0.46*cos(2.0*pi*(1:hlength)/(hlength+1)) #Hamming
+#    hlength=round(Int,hlength)
+#    println("hlength=",hlength)
+#    hrow = size(h)[1] 
+#    Lh=round(Int,(hrow-1)/2)
+#    h=h/h[Lh+1]
+#    hi = Interpolations.interpolate((t[1:hlength],),h,Interpolations.Gridded(Interpolations.Linear()));
+
+    ##########################################
+
+
+
     d1=0.675
     d2=0.85
     #interpolation
@@ -44,7 +59,11 @@ function tfrpowv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0)
         for mrow=-taumax:taumax
             mrowx=round(Int64,rem(N+mrow,N)+1)
 #            println(mrowx," ",mrow," ",ti+d2*mrow*tau," ",t[end]," ",ti-d2*mrow*tau," ",1)
+#####temp#####
+#            tfr[mrowx,icol] = hi[Lh+1+tau].*xi[ti+d1*mrow*tau].*yi[ti+d1*mrow*tau].*conj(yi[ti-d1*mrow*tau]).*conj(yi[ti-d1*mrow*tau]).*conj(yi[ti+d2*mrow*tau]).*yi[ti-d2*mrow*tau]
+##############
             tfr[mrowx,icol] = xi[ti+d1*mrow*tau].*yi[ti+d1*mrow*tau].*conj(yi[ti-d1*mrow*tau]).*conj(yi[ti-d1*mrow*tau]).*conj(yi[ti+d2*mrow*tau]).*yi[ti-d2*mrow*tau]
+
         end
     end
 

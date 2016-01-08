@@ -1,7 +1,7 @@
 module cohenclass
 import jnufft
 
-function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,use_nufft=true)
+function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,method="mean",use_nufft=true,)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
@@ -26,13 +26,13 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,use_nufft=true)
     end
 
     ###Choose FFT or DFT
-    if isnan(f)[1]
+    if isnan(f)[1] && ismatch(r"mean",method)
         if silent==0 println("Use fft.") end
         for i=1:N
             tfr[:,i]=fft(tfr[:,i])
         end
         return tfr
-    elseif use_nufft
+    elseif use_nufft && ismatch(r"mean",method)
         if silent==0 println("Use nufft.") end
         Nf=size(f)[1]
         tfrnew=zeros(Complex64,Nf,N) 
@@ -40,7 +40,7 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,use_nufft=true)
             tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
         end        
         return tfrnew
-    else
+    elseif ismatch(r"mean",method)
         if silent==0 println("Use Direct DFT.") end
         Nf=size(f)[1]
         m=collect(1:N)
@@ -48,6 +48,20 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,use_nufft=true)
         for i=1:N
             for j=1:Nf                
                 tfrnew[j,i]=sum(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
+            end            
+        end
+        return tfrnew
+    elseif ismatch(r"median",method)
+        if silent==0 println("Robust Wigner distribution") end
+        Nf=size(f)[1]
+        m=collect(1:N)
+        tfrnew=zeros(Complex64,Nf,N) 
+        for i=1:N
+            if rem(i,256)==1 println(i,"/",N) end
+            for j=1:Nf             
+                arr=real(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
+                arr=arr[arr.>0.0]
+                tfrnew[j,i]=median(arr)
             end            
         end
         return tfrnew
@@ -65,7 +79,8 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,use_nufft=true)
 
 end
 
-function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,use_nufft=true)
+function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",use_nufft=true)
+    #method = median : robust Wigner distribution
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
@@ -79,7 +94,7 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,use_nufft=true)
     end
     if isnan(h)[1] 
         hlength=floor(N/4)
-        hlength=hlength+1-rem(hlength,2)
+        hlength=hlength+1-rem(hlength,2)        
         h=0.54 - 0.46*cos(2.0*pi*(1:hlength)/(hlength+1)) #Hamming
     end    
     hrow = size(h)[1] 
@@ -99,13 +114,13 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,use_nufft=true)
         end
     end
 
-    if isnan(f)[1]
+    if isnan(f)[1] && ismatch(r"mean",method)
         if silent==0 println("Use fft.") end
         for i=1:N
             tfr[:,i]=fft(tfr[:,i])
         end
         return tfr
-    elseif use_nufft
+    elseif use_nufft && ismatch(r"mean",method)
         if silent==0 println("Use nufft.") end
         Nf=size(f)[1]
         tfrnew=zeros(Complex64,Nf,N) 
@@ -113,7 +128,7 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,use_nufft=true)
             tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
         end
         return tfrnew
-    else
+    elseif ismatch(r"mean",method)
         if silent==0 println("Use dft.") end
         Nf=size(f)[1]
         m=collect(1:N)
@@ -123,7 +138,22 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,use_nufft=true)
                 tfrnew[j,i]=sum(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
             end            
         end
+    elseif ismatch(r"median",method)
+        if silent==0 println("Robust pseudo Wigner distribution") end
+        Nf=size(f)[1]
+        m=collect(1:N)
+        tfrnew=zeros(Complex64,Nf,N) 
+        for i=1:N
+            if rem(i,256)==1 println(i,"/",N) end
+            for j=1:Nf             
+                arr=real(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
+                arr=arr[arr.>0.0]
+                tfrnew[j,i]=median(arr)
+            end            
+        end
         return tfrnew
+    else
+        if silent==0 println("No method exists.") end
     end
 
     return tfr
