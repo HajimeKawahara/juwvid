@@ -79,7 +79,7 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,method="mean",use_nufft=true,)
 
 end
 
-function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",use_nufft=true)
+function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,use_nufft=true)
     #method = median : robust Wigner distribution
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
@@ -93,7 +93,7 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",use_nufft
         sw=1
     end
     if isnan(h)[1] 
-        hlength=floor(N/4)
+        hlength=floor(N/nwindow)
         hlength=hlength+1-rem(hlength,2)        
         h=0.54 - 0.46*cos(2.0*pi*(1:hlength)/(hlength+1)) #Hamming
     end    
