@@ -45,15 +45,15 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
             ih=ih+1
 #            println("ih=",ih)
             tfrvec=zeros(Complex64,N) #
-            hlength=floar(harray[ih])
+            hlength=floor(harray[ih])
             hlength=hlength+1-rem(hlength,2)        
             
-#            if ismatch(r"Hamming",wtype)         
+            if ismatch(r"Hamming",wtype)         
                 h=0.54 - 0.46*cos(2.0*pi*(1:hlength)/(hlength+1)) #Hamming
-#            else
+            else
 #                #rectangular
-#                h=ones(round(Int,hlength))
-#            end    
+                h=ones(round(Int,hlength))
+            end    
 
             hrow = size(h)[1] 
             Lh=round(Int,(hrow-1)/2)
@@ -85,15 +85,14 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
             fhs=indmax(abs(tfrvec))            
             ##### CRITERION #####
             A=1.0
-            sigmae=0.00
+            sigmae=1.0/3.12
             kappa=5
             delkappa=0.97
-            p=0.72
-            p1=0.97
             #####################
-            sigmahs=sqrt(6.0*sigmae^2/(A^2*hlength^3))
-            if ih==5                
-#            if ih>1 && abs(fhsprev - fhs) <= (kappa+delkappa)*(sigmahsprev+sigmahs)                
+            sigmahs=sqrt((kappa+delkappa)*sigmae^2/(A^2*hlength^3))
+#            if ih==6                
+                #println("wid=",harray[ih+1])
+            if ih>1 && abs(fhsprev - fhs)*1024.0 <= (kappa+delkappa)*(sigmahsprev+sigmahs)                
                 #println("change ","ih=",ih,"left:",abs(fhsprev - fhs),"right:",(kappa+delkappa)*(sigmahsprev+sigmahs))
                 prevcrit=true
                 if ih == length(harray)
@@ -114,12 +113,27 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
         end
         
     end
-    println(windows)
+    #println(windows)
     return tfrnew, windows
 
 end
 
 end
+
+#import DSP
+#import cohenclass
+#y=linspace(0.0,16.0,16)
+#z=DSP.Util.hilbert(y)
+#tfr=cohenclass.tfrpwv(z)
+#tfr,windows=pwvaw.awpwv(z)
+#println(tfr[:,1])
+#println(tfr[:,8])
+
+
+#tfr=cohenclass.tfrwv(z,NaN,NaN,[1,2],NaN,0)
+##tfr=cohenclass.tfrpwv(z)
+#println(tfr)
+
 
 #import DSP
 #nsample=1024
@@ -128,4 +142,4 @@ end
 #z=DSP.Util.hilbert(y)
 #tfr,windows=pwvaw.awpwv(z)
 #println(windows)
-
+#19
