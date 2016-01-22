@@ -3,7 +3,8 @@ module pwvaw #pseudo Wigner distribution with the adaptive
 function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,use_nufft=true)
     #method = median : robust Wigner distribution
 
-    wtype="rect"
+#    wtype="rect"
+    wtype="Hamming"
 
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
@@ -26,7 +27,7 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
     tfrnew=zeros(Complex64,Nf,N) 
 
     #set window array
-    M=N/4
+    M=N/2
     harray=[M]
 #    println(harray)
     while M>4
@@ -38,9 +39,10 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
 #    println("Adaptive window from =",harray)
 
     for icol=1:N
-        ih=0
         crit=true
         prevcrit=false
+        ih=0
+
         while crit && ih < length(harray) 
             ih=ih+1
 #            println("ih=",ih)
@@ -70,46 +72,41 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
 
             if isnan(f)[1] 
 #                if silent==0 println("Use fft.") end
-                tfrnew[:,icol]=fft(tfrvec)
+                tfrvecp=fft(tfrvec)
             elseif use_nufft
 #                if silent==0 println("Use nufft.") end
-                tfrnew[:,icol]=jnufft.call_ionufft1d2(f,tfrvec,-1,10.0^-28)[1:Nf]
+                tfrvecp=jnufft.call_ionufft1d2(f,tfrvec,-1,10.0^-28)[1:Nf]
             else
 #                if silent==0 println("Use dfft.") end 
                 m=collect(1:N)
                 for j=1:Nf                
-                    tfrnew[j,icol]=sum(tfrvec.*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
+                    tfrvecp[j]=sum(tfrvec.*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
                 end            
             end
 
-            fhs=indmax(abs(tfrvec))            
+            fhs=indmax(abs(tfrvecp))            
             ##### CRITERION #####
-            A=1.0
-            sigmae=1.0/3.12
-            kappa=5
+            sigmaeA=1.0/3.16 # sigma_epsilon/A-> seq
+            kappa=5.0
             delkappa=0.97
             #####################
-            sigmahs=sqrt((kappa+delkappa)*sigmae^2/(A^2*hlength^3))
-#            if ih==6                
-                #println("wid=",harray[ih+1])
-            if ih>1 && abs(fhsprev - fhs)*1024.0 <= (kappa+delkappa)*(sigmahsprev+sigmahs)                
-                #println("change ","ih=",ih,"left:",abs(fhsprev - fhs),"right:",(kappa+delkappa)*(sigmahsprev+sigmahs))
-                prevcrit=true
-                if ih == length(harray)
-                    crit=false
-                    push!(windows,harray[ih])
-                end
-
-            end
- 
-            if prevcrit
+            sigmahs=sqrt((kappa+delkappa)*sigmaeA^2/(hlength^3))
+#            if ih>1
+#                println("ih=",ih,"fhs",fhs,"left:",abs(fhsprev - fhs)/(2.0+N)," <? right:",(kappa+delkappa)*(sigmahsprev+sigmahs))
+#            end
+            if ih>1 && abs(fhsprev - fhs)/(2.0*N) > (kappa+delkappa)*(sigmahsprev+sigmahs)      
+                tfrnew[:,icol]=tfrvecprev
+                push!(windows,harray[ih-1])
                 crit=false
-                push!(windows,harray[ih])
+            elseif ih==length(harray)
+                tfrnew[:,icol]=tfrvecprev
+                push!(windows,harray[ih-1])
+                crit=false
             end
             
             fhsprev=fhs
             sigmahsprev=sigmahs
-
+            tfrvecprev=copy(tfrvecp)
         end
         
     end
