@@ -34,6 +34,7 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
         push!(harray,M)       
     end
     harray=harray[end:-1:1]
+    windows=[]
     println("Adaptive window from =",harray)
 
     for icol=1:N
@@ -95,29 +96,38 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
             sigmahs=sqrt(6.0*sigmae^2/(A^2*hlength^3))
                         
             if ih>1 && abs(fhsprev - fhs) <= (kappa+delkappa)*(sigmahsprev+sigmahs)
-                println("change ","ih=",ih)
+#                println("change ","ih=",ih)
                 prevcrit=true
+                if ih == length(harray)
+                    crit=false
+                    push!(windows,harray[ih])
+                end
+
             end
-            #kappa+Delta kappa
+ 
+            if prevcrit
+                crit=false
+                push!(windows,harray[ih])
+            end
+            
             fhsprev=fhs
             sigmahsprev=sigmahs
-            if prevcrit; crit=false; end
+
         end
         
     end
 
-    return tfrnew
+    return tfrnew, windows
 
 end
 
 end
 
-#import DSP
-#nsample=1024
-#x=linspace(0.0,nsample,nsample)
-#y=x
-#z=DSP.Util.hilbert(y)
-#tfr=pwvaw.awpwv(z)
-#tfr=cohenclass.tfrpwv(z)
-#println(tfr)
+import DSP
+nsample=1024
+x=linspace(0.0,nsample,nsample)
+y=x
+z=DSP.Util.hilbert(y)
+tfr,windows=pwvaw.awpwv(z)
+println(windows)
 
