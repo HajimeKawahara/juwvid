@@ -1,4 +1,5 @@
 module pwvaw #pseudo Wigner distribution with the adaptive 
+import jnufft
 
 function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,use_nufft=true)
     #method = median : robust Wigner distribution
@@ -19,7 +20,7 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
     end
 
     #prepare tfrnew
-    if isnan(f)
+    if isnan(f)[1]
         Nf=N
     else
         Nf=size(f)[1]    
@@ -89,6 +90,7 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
             sigmaeA=1.0/3.16 # sigma_epsilon/A-> seq
             kappa=5.0
             delkappa=0.97
+
             #####################
             sigmahs=sqrt((kappa+delkappa)*sigmaeA^2/(hlength^3))
 #            if ih>1
