@@ -2,7 +2,7 @@
 
 [![Licence](http://img.shields.io/badge/license-GPLv2-blue.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 
-Julia codes for Cohen's class distribution. Currently, it's under development and functions available are very limited. I imported the Wigner-Ville distribution, the pseudo Wigner-Ville distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and modified them. Regarding tftb, visit http://tftb.nongnu.org/ .
+Julia codes for Cohen's class distribution. Currently, it's under development and functions available are very limited. I imported the Wigner-Ville distribution, the pseudo Wigner-Ville distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and modified them. Regarding tftb, visit http://tftb.nongnu.org/. The modification includes the non-uniform FFT and the adaptive algorithm by Stankovic, Dakovic, Thayaparan 2013. 
 
 ## Requirement
 
@@ -36,9 +36,8 @@ to generate a shared library file, libnufft.so. Change the path of ccall in jnuf
 
 - Wigner-Ville distribution (w/ NUFFT)
 - Cross Wigner-Ville distribution  (w/ NUFFT)
-- Pseudo Wigner-Ville distribution (w/ NUFFT)
+- Pseudo Wigner-Ville distribution (w/ NUFFT and Adaptive Algorithm)
 - Short-time Fourier Transform
-- polynomial WV (under development)
 
 #### Example
 

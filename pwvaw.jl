@@ -3,7 +3,7 @@ import jnufft
 
 function awpwv(x,sigmaeA,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,silent=0,method="mean",use_nufft=true)
     # adaptive algorithm of pseudo Wigner-Ville distribution 
-    # Reference Time Frequency Signal Analysis with Applications, 2013, Stanlovi and Dakovic p420
+    # Reference: Time Frequency Signal Analysis with Applications, 2013, Stanlovi, Dakovic, and Thayaparan p420
     # sigmaeA[1:length(x)]: sigmae/A
     # If f is not NaN, use NUFFT by default
 
