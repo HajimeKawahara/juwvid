@@ -4,8 +4,8 @@ import jnufft
 function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,use_nufft=true)
     #method = median : robust Wigner distribution
 
-#    wtype="rect"
-    wtype="Hamming"
+    wtype="rect"
+#    wtype="Hamming"
 
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
@@ -84,18 +84,21 @@ function awpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,
                     tfrvecp[j]=sum(tfrvec.*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
                 end            
             end
-
             fhs=indmax(abs(tfrvecp))            
             ##### CRITERION #####
             sigmaeA=1.0/3.16 # sigma_epsilon/A-> seq
             kappa=5.0
             delkappa=0.97
-
             #####################
             sigmahs=sqrt((kappa+delkappa)*sigmaeA^2/(hlength^3))
-#            if ih>1
-#                println("ih=",ih,"fhs",fhs,"left:",abs(fhsprev - fhs)/(2.0+N)," <? right:",(kappa+delkappa)*(sigmahsprev+sigmahs))
+
+#            if icol==177 || icol==176
+#                println("---",icol)
+#                println("f ",fhs)
+#                println("sigma ",sigmahs)
+#                println("---")
 #            end
+
             if ih>1 && abs(fhsprev - fhs)/(2.0*N) > (kappa+delkappa)*(sigmahsprev+sigmahs)      
                 tfrnew[:,icol]=tfrvecprev
                 push!(windows,harray[ih-1])

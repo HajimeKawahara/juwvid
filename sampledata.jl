@@ -19,12 +19,14 @@ end
 function genstepfm(nsamp,xend=1.0)
     nsamp=1024
     x=linspace(0.0,xend,nsamp)
-    iw=nsamp/4*atan(250*(x-0.5))+nsamp/4
+    iw=nsamp/4*atan(250*(x-0.5))+pi*nsamp/4
     phase=cumsum(iw)/nsamp
     y=cos(phase)
+    iy=sin(phase)*im
     ynorm=pi/x[end]
-    return x, y, iw, ynorm
+    return x, y+iy, iw, ynorm
 end
 
 
 end
+
