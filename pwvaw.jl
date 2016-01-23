@@ -1,10 +1,10 @@
 module pwvaw #pseudo Wigner distribution with the adaptive algorithm
 import jnufft
 
-function awpwv(x,sigmaeA,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,silent=0,method="mean",use_nufft=true)
+function awpwv(x,varrat,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,silent=0,method="mean",use_nufft=true)
     # adaptive algorithm of pseudo Wigner-Ville distribution 
     # Reference: Time Frequency Signal Analysis with Applications, 2013, Stanlovi, Dakovic, and Thayaparan p420
-    # sigmaeA[1:length(x)]: sigmae/A
+    # varrat[1:length(x)]: variance ratio of the noise to the signal (sigma_e/A)^2
     # If f is not NaN, use NUFFT by default
 
     wtype="rect"
@@ -81,7 +81,7 @@ function awpwv(x,sigmaeA,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,silent=
                 end            
             end
             fhs=indmax(abs(tfrvecp))            
-            sigmahs=sqrt((kappa+delkappa)*sigmaeA[icol]^2/(hlength^3))
+            sigmahs=sqrt((kappa+delkappa)*varrat[icol]/(hlength^3))
 
             if ih>1 && abs(fhsprev - fhs)/(2.0*N) > (kappa+delkappa)*(sigmahsprev+sigmahs)      
                 tfrnew[:,icol]=tfrvecprev
