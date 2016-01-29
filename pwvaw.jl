@@ -1,16 +1,28 @@
 module pwvaw #pseudo Wigner distribution with the adaptive algorithm
 import jnufft
+import juwutils
 
-function awpwv(x,varrat,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,silent=0,method="mean",use_nufft=true)
+function awpwv(x,varrat,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,ndiv_static_crit=NaN,wtype="rect",silent=0,method="mean",use_nufft=true)
+    #----------------------------------
     # adaptive algorithm of pseudo Wigner-Ville distribution 
-    # Reference: Time Frequency Signal Analysis with Applications, 2013, Stanlovi, Dakovic, and Thayaparan p420
+    # Reference: Stankovic, Dakovic, and Thayaparan p420
     # varrat[1:length(x)]: variance ratio of the noise to the signal (sigma_e/A)^2
     # If f is not NaN, use NUFFT by default
-
-    wtype="rect"
+    # ndiv_static_crit: static condition
+    #----------------------------------
+    # kappa delta kappa
+    # 3.0,0.58
+    # 2.0,0.39
+    #----------------------------------
+#    wtype="rect"
 #    wtype="Hamming"
-
+    #----------------------------------
     xrow = size(x)[1] 
+    if isnan(ndiv_static_crit)
+        static_crit=xrow
+    else
+        static_crit=xrow/ndiv_static_crit
+    end
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
     if isnan(y)[1] 
@@ -39,13 +51,11 @@ function awpwv(x,varrat,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,silent=0
     end
     harray=harray[end:-1:1]
     windows=[]
-
     #
     for icol=1:N
         crit=true
         prevcrit=false
         ih=0
-
         while crit && ih < length(harray) 
             ih=ih+1
             tfrvec=zeros(Complex64,N) #
@@ -82,20 +92,28 @@ function awpwv(x,varrat,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,silent=0
             end
 
             ####convert f (probably)
-            fhs=indmax(abs(tfrvecp))            
+            indm=indmax(abs(tfrvecp))
+            if isnan(f)[1] 
+                fhs=indm/(2.0*N)
+            else
+                fhs=juwutils.index_to_frequency(indm, f, 1.0)
+            end
             sigmahs=sqrt((kappa+delkappa)*varrat[icol]/(hlength^3))
 
-            if ih>1 && abs(fhsprev - fhs)/(2.0*N) > (kappa+delkappa)*(sigmahsprev+sigmahs)      
+            if ih>1 && abs(fhsprev - fhs) > (kappa+delkappa)*(sigmahsprev+sigmahs) && abs(indmprev-indm) < static_crit      
                 tfrnew[:,icol]=tfrvecprev
                 push!(windows,harray[ih-1])
                 crit=false
+#                println("icol=",icol," ih=",ih, " window=", harray[ih-1])
             elseif ih==length(harray)
                 tfrnew[:,icol]=tfrvecprev
                 push!(windows,harray[ih-1])
                 crit=false
             end            
+#            if icol==135 println("ih=",ih,"fhs=",fhs,"sig",sigmahs,"index max",indm) end
 
             fhsprev=fhs
+            indmprev=indm
             sigmahsprev=sigmahs
             tfrvecprev=copy(tfrvecp)
         end        
