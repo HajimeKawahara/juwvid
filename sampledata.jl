@@ -16,8 +16,7 @@ function genlinfm(nsamp,wp=1.0,s=0.01, xend=100*pi)
     return x, y, iw, ynorm
 end
 
-function genstepfm(nsamp,xend=1.0)
-    nsamp=1024
+function genstepfm(nsamp=1024,xend=1.0)
     x=linspace(0.0,xend,nsamp)
     iw=nsamp/4*atan(250*(x-0.5))+pi*nsamp/4
     phase=cumsum(iw)/nsamp

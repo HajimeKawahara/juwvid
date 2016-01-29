@@ -80,6 +80,8 @@ function awpwv(x,varrat,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,silent=0
                     tfrvecp[j]=sum(tfrvec.*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N)) #dft
                 end            
             end
+
+            ####convert f (probably)
             fhs=indmax(abs(tfrvecp))            
             sigmahs=sqrt((kappa+delkappa)*varrat[icol]/(hlength^3))
 
