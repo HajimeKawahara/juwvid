@@ -11,6 +11,7 @@ function awpwv(x,varrat,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,ndiv_sta
     # ndiv_static_crit: static condition
     #----------------------------------
     # kappa delta kappa
+    # 5.0,0.97
     # 3.0,0.58
     # 2.0,0.39
     #----------------------------------
