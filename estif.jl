@@ -39,7 +39,7 @@ function ifestxvwd(z,ynorm,dx,niter,indfn=NaN,isf=NaN,ief=NaN,fin=NaN,tfrsw=fals
     end
 end
 
-function ifestxpvwd(z,ynorm,dx,niter,indfn=NaN,isf=NaN,ief=NaN,fin=NaN,tfrsw=false)
+function ifestxpvwd(z,ynorm,dx,niter,indfn=NaN,isf=NaN,ief=NaN,fin=NaN,nwindow=4,tfrsw=false)
     if isnan(fin[1])
         nf=size(z)
     else
@@ -57,10 +57,10 @@ function ifestxpvwd(z,ynorm,dx,niter,indfn=NaN,isf=NaN,ief=NaN,fin=NaN,tfrsw=fal
     for it=1:niter
         zhat=exp(im*cumsum(indfn*ynorm*dx))
         if isnan(fin[1])
-            tfrn=cohenclass.tfrpwv(z,zhat,NaN,NaN,NaN,1)
+            tfrn=cohenclass.tfrpwv(z,zhat,NaN,NaN,NaN,1,"mean",nwindow)
             indfn=extif.maxif(abs(tfrn),isf,ief)
         else
-            tfrn=cohenclass.tfrpwv(z,zhat,NaN,fin,NaN,NaN,0);
+            tfrn=cohenclass.tfrpwv(z,zhat,NaN,fin,NaN,NaN,0,"mean",nwindow);
             indfna=extif.maxif(abs(tfrn),isf,ief)
             indfn=fin[round(Int,indfna)]
         end
@@ -74,7 +74,7 @@ function ifestxpvwd(z,ynorm,dx,niter,indfn=NaN,isf=NaN,ief=NaN,fin=NaN,tfrsw=fal
     end
 end
 
-function ifestxpowv(z,ynorm,dx,niter,indfn=NaN,isf=NaN,ief=NaN,fin=NaN,tfrsw=false)
+function ifestxpowv(z,ynorm,dx,niter,indfn=NaN,isf=NaN,ief=NaN,fin=NaN,nwindow=4,tfrsw=false)
 
     if isnan(fin[1])
         nf=size(z)
