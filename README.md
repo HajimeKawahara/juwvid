@@ -11,8 +11,7 @@ Julia codes for Cohen's class distribution. Currently, it's under development an
 #### Julia Packages 
 
 - DSP
-- Interpolations (in future)
-- IJulia, Winston, Color (just for showing a sample)
+- Jupyter, Winston, Color, PyPlot (these are just for tutorials)
 
 To install, use Pkg.add in the julia console, such as
 
