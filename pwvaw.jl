@@ -97,7 +97,7 @@ function awpwv(x,varrat,y=NaN,t=NaN,f=NaN,N=NaN,kappa=5.0,delkappa=0.97,ndiv_sta
             if isnan(f)[1] 
                 fhs=indm/(2.0*N)
             else
-                fhs=juwutils.index_to_frequency(indm, f, 1.0)
+                fhs=juwutils.index_to_frequency(indm, f, 1.0, xrow)
             end
             sigmahs=sqrt((kappa+delkappa)*varrat[icol]/(hlength^3))
 
