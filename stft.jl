@@ -11,17 +11,17 @@ function tfrstft(x,t=NaN,N=NaN,h=NaN)
     end        
     h=h/norm(h)
     hrow=length(h)
-    Lh=round(Int64,(hrow-1)/2)
- 
+    Lh=round(Int64,(hrow-1)/2) ##??
+
     tfr=zeros(Complex64,N,N) # plane by default
     for icol=1:N
         ti=t[icol]
-     # tau=collect(-minimum([round(N/2)-1,Lh,ti-1]):minimum([round(N/2)-1,Lh,xrow-ti]))
-     # indices= rem(N+tau,N)+1; 
-     # tfr(indices,icol)=x(ti+tau,1).*conj(h(Lh+1+tau));
+        # tau=collect(-minimum([round(N/2)-1,Lh,ti-1]):minimum([round(N/2)-1,Lh,xrow-ti]))
+        # indices= rem(N+tau,N)+1; 
+        # tfr(indices,icol)=x(ti+tau,1).*conj(h(Lh+1+tau));
 
-        taumin=-minimum([round(N/2)-1,Lh,ti-1])
-        taumax=minimum([round(N/2)-1,Lh,xrow-ti])
+        taumin=-minimum([floor(N/2)-1,Lh,ti-1])
+        taumax=minimum([floor(N/2)-1,Lh,xrow-ti])
         tau=round(Int64,taumin:taumax); indices=round(Int64,rem(N+tau,N)+1)
         tfr[indices,icol] = x[ti+tau].*conj(h[Lh+1+tau])
     end

@@ -113,6 +113,6 @@ end
 
 
 end
-jnufft.test_juliafft(7)
-jnufft.test_1d2(7,7)
-jnufft.test_1d3(7,7)
+#jnufft.test_juliafft(7)
+#jnufft.test_1d2(7,7)
+#jnufft.test_1d3(7,7)
