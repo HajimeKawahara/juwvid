@@ -14,24 +14,26 @@ function call_ionufft1d2(xj,fk,iflag=-1,eps=10.0^-24)
 
     mx=maximum([nj,ms])
     cj = zeros(Complex128,mx) 
-
+    
     xj0 = zeros(Float64,nj)     
     for j = 1:nj
         xj0[j] = 2*pi*xj[j]/ms
     end
-
     fk0 = zeros(Complex128,ms) 
-    for j = 1:round(Int,ms/2)
-        fk0[j] = fk[round(Int,j+ms/2)]
+    offset=mod(ms,2)
+    for j = 1:floor(Int,ms/2)
+#        println("j=",j,"->",floor(Int,j+ms/2)+offset)
+        fk0[j] = fk[floor(Int,j+ms/2)+offset]
     end
-    for j = round(Int,ms/2+1):ms          
-        fk0[j] = fk[round(Int,j-ms/2)]
+    for j = floor(Int,ms/2+1):ms          
+#        println("j=",j,"->",floor(Int,j-ms/2)+offset)
+        fk0[j] = fk[floor(Int,j-ms/2)+offset]
     end
 
     #(nj,ms,mx,iflag,eps,xj,fk,cj)
     product = ccall((:__ionufft_MOD_ionufft1d2, "/Users/kawahara/juwvid/libnufft.so"),Int32,(Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Float64},Ptr{Float64},Ptr{Complex128},Ptr{Complex128}),&nj,&ms,&mx,&iflag,&eps,xj0,fk0,cj)
 #    return cj[1:ms]
-    return unshift!(cj[1:mx-1], cj[mx])
+    return unshift!(cj[1:mx-1], cj[nj])    
 end
 
 function call_ionufft1d3(sk,xj,cj,iflag=-1,eps=10.0^-24)
@@ -53,15 +55,16 @@ function call_ionufft1d3(sk,xj,cj,iflag=-1,eps=10.0^-24)
 
     xj0 = zeros(Float64,nj)     
     for j = 1:nj
-        xj0[j] = 2*pi*(xj[j]-nj/2-1)/nj
+        xj0[j] = 2*pi*(xj[j]-floor(nj/2+1))/nj
     end
 
     cj0 = zeros(Complex128,nj) 
-    for j = 1:round(Int,nj/2)
-        cj0[j] = cj[round(Int,j+nj/2)]
+    offset=mod(nj,2)
+    for j = 1:floor(Int,nj/2)
+        cj0[j] = cj[floor(Int,j+nj/2)+offset]
     end
-    for j = round(Int,nj/2+1):nj          
-        cj0[j] = cj[round(Int,j-nj/2)]
+    for j = floor(Int,nj/2+1):nj          
+        cj0[j] = cj[floor(Int,j-nj/2)+offset]
     end
 
     #ionufft1d3(nj,nk,iflag,eps,xj,sk,cj,fk)
@@ -110,6 +113,6 @@ end
 
 
 end
-jnufft.test_juliafft(8)
-jnufft.test_1d2(8,10)
-jnufft.test_1d3(8,10)
+jnufft.test_juliafft(7)
+jnufft.test_1d2(7,7)
+jnufft.test_1d3(7,7)
