@@ -47,12 +47,13 @@ function call_ionufft1d3(sk,xj,cj,iflag=-1,eps=10.0^-24)
     fk = zeros(Complex128,nk) 
     sk0 = zeros(Float64,nk)     
     for k = 1:nk
-        sk0[k] = 2*pi*sk[k]/nk
+#        sk0[k] = 2*pi*sk[k]/nk
+        sk0[k] = sk[k]
     end
 
     xj0 = zeros(Float64,nj)     
     for j = 1:nj
-        xj0[j] = xj[j]
+        xj0[j] = 2*pi*(xj[j]-nj/2-1)/nj
     end
 
     cj0 = zeros(Complex128,nj) 
@@ -65,36 +66,50 @@ function call_ionufft1d3(sk,xj,cj,iflag=-1,eps=10.0^-24)
 
     #ionufft1d3(nj,nk,iflag,eps,xj,sk,cj,fk)
     product = ccall((:__ionufft_MOD_ionufft1d3, "/Users/kawahara/juwvid/libnufft.so"),Int32,(Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Float64},Ptr{Float64},Ptr{Float64},Ptr{Complex128},Ptr{Complex128}),&nj,&nk,&iflag,&eps,xj0,sk0,cj0,fk)
-
-#    return cj[1:ms]
+    
     return unshift!(fk[1:nk-1], fk[nk])
+
 end
 
-function test_1d2()
+function test_1d2(ms=8,nj=16)
 ##TEST for 1d2
 ##value for time sequence (discrete position)
-ms=8
+println("########### JNUFFT 1D2 ###########")
 fk = collect(1:ms)
 println("value for time sequence=",fk[1],"-",fk[end])
 ##arbitrary frequency
-nj=120
 xj = collect(1:nj)*real(ms/nj)     
 println("requested frequency=",xj[1],"-",xj[end])
 cj=jnufft.call_ionufft1d2(xj,fk,-1,10.0^-32)
-println("derived coefficient=",cj[1],"-",cj[end])
+println("derived coefficient=",cj)
 end
 
-end
-
+function test_1d3(nj=8,nk=16)
 #test_1d2()
-nj=8
+println("########### JNUFFT 1D3 ###########")
 xj= collect(1:nj)
 println("time grids=",xj)
 cj = collect(1:nj)
 println("value for time sequence=",cj[1],"-",cj[end])
 ##arbitrary frequency
-nk=120
 sk = collect(1:nk)*real(nj/nk)     
 println("requested frequency=",sk[1],"-",sk[end])
 fk=jnufft.call_ionufft1d3(sk,xj,cj,-1,10.0^-24)
-println("derived coefficient=",fk[1],"-",fk[end])
+println("derived coefficient=",fk)
+end
+
+
+function test_juliafft(nj)
+cj = collect(1:nj)
+println("########### JULIA FFT ###########")
+println("value for time sequence=",cj[1],"-",cj[end])
+##arbitrary frequency
+fk=fft(cj)
+println("derived coefficient=",fk)
+end
+
+
+end
+jnufft.test_juliafft(8)
+jnufft.test_1d2(8,10)
+jnufft.test_1d3(8,10)
