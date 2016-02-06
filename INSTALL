@@ -1,0 +1,7 @@
+0. if you do not have DSP package, type the below in Julia console
+>julia Pkg.add("DSP")
+
+1. Change paths in ccall of jnufft.jl
+#ex) "/Users/user_name/juwvid/libnufft.so"
+
+2. Edit Makefile and perform make
