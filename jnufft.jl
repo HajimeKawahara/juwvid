@@ -1,7 +1,9 @@
 module jnufft
-#change the path in ccall for libnufft.so
+#change this path in ccall for libnufft.so
 
 function call_ionufft1d2(xj,fk,iflag=-1,eps=10.0^-24)
+#requested frequency xj
+#values in the time sequence fk
 
     nj=Int32(length(xj))    
 #    println("nj=",nj)
@@ -25,19 +27,74 @@ function call_ionufft1d2(xj,fk,iflag=-1,eps=10.0^-24)
     for j = round(Int,ms/2+1):ms          
         fk0[j] = fk[round(Int,j-ms/2)]
     end
+
+    #(nj,ms,mx,iflag,eps,xj,fk,cj)
     product = ccall((:__ionufft_MOD_ionufft1d2, "/Users/kawahara/juwvid/libnufft.so"),Int32,(Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Float64},Ptr{Float64},Ptr{Complex128},Ptr{Complex128}),&nj,&ms,&mx,&iflag,&eps,xj0,fk0,cj)
 #    return cj[1:ms]
     return unshift!(cj[1:mx-1], cj[mx])
 end
 
+function call_ionufft1d3(sk,xj,cj,iflag=-1,eps=10.0^-24)
+#requested frequency: sk
+#input nonuniform time sequence (time): xj
+#values in the time sequence (value): cj
+
+    nk=Int32(length(sk))
+    nj=Int32(length(xj))    
+    iflag=Int32(iflag)
+    eps=Float64(eps)
+
+    fk = zeros(Complex128,nk) 
+    sk0 = zeros(Float64,nk)     
+    for k = 1:nk
+        sk0[k] = 2*pi*sk[k]/nk
+    end
+
+    xj0 = zeros(Float64,nj)     
+    for j = 1:nj
+        xj0[j] = xj[j]
+    end
+
+    cj0 = zeros(Complex128,nj) 
+    for j = 1:round(Int,nj/2)
+        cj0[j] = cj[round(Int,j+nj/2)]
+    end
+    for j = round(Int,nj/2+1):nj          
+        cj0[j] = cj[round(Int,j-nj/2)]
+    end
+
+    #ionufft1d3(nj,nk,iflag,eps,xj,sk,cj,fk)
+    product = ccall((:__ionufft_MOD_ionufft1d3, "/Users/kawahara/juwvid/libnufft.so"),Int32,(Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Float64},Ptr{Float64},Ptr{Float64},Ptr{Complex128},Ptr{Complex128}),&nj,&nk,&iflag,&eps,xj0,sk0,cj0,fk)
+
+#    return cj[1:ms]
+    return unshift!(fk[1:nk-1], fk[nk])
 end
 
-##value for discrete position
-#ms=8
-#fk = collect(1:ms)
+function test_1d2()
+##TEST for 1d2
+##value for time sequence (discrete position)
+ms=8
+fk = collect(1:ms)
+println("value for time sequence=",fk[1],"-",fk[end])
 ##arbitrary frequency
-#nj=120
-#xj = collect(1:nj)*real(ms/nj)     
-#cj=jnufft.call_ionufft1d2(xj,fk,-1,10.0^-32)
-#println(cj)
+nj=120
+xj = collect(1:nj)*real(ms/nj)     
+println("requested frequency=",xj[1],"-",xj[end])
+cj=jnufft.call_ionufft1d2(xj,fk,-1,10.0^-32)
+println("derived coefficient=",cj[1],"-",cj[end])
+end
 
+end
+
+#test_1d2()
+nj=8
+xj= collect(1:nj)
+println("time grids=",xj)
+cj = collect(1:nj)
+println("value for time sequence=",cj[1],"-",cj[end])
+##arbitrary frequency
+nk=120
+sk = collect(1:nk)*real(nj/nk)     
+println("requested frequency=",sk[1],"-",sk[end])
+fk=jnufft.call_ionufft1d3(sk,xj,cj,-1,10.0^-24)
+println("derived coefficient=",fk[1],"-",fk[end])

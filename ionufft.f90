@@ -15,5 +15,18 @@ contains
     
   end subroutine ionufft1d2
 
+  subroutine ionufft1d3(nj,nk,iflag,eps,xj,sk,cj,fk)
+    implicit none
+    integer, intent(in) :: nj,nk,iflag
+    real*8,intent(in) :: xj(nj)
+    real*8,intent(in) :: sk(nk)
+    real*8,intent(in) :: eps
+    complex*16,intent(out) :: fk(nk)
+    complex*16,intent(in) :: cj(nj)
+    integer :: ier
+    
+    call nufft1d3f90(nj,xj,cj,iflag,eps,nk,sk,fk,ier)
+    
+  end subroutine ionufft1d3
 
 end module ionufft
