@@ -40,5 +40,12 @@ function genmultifm622x(nsamp=512)
     return t, x
 end
 
+function genmultifm623(nsamp=256)
+    #Boashash+2015 Example 6.2.3
+    t=collect(linspace(-1.0,1.0,nsamp))
+    x=cos(20.0*sin(pi*t)+30.0*pi*t)+sin(20.0*cos(pi*t)+100.0*pi*t)
+    return t, x
+end
+
 end
 
