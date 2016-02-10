@@ -1,6 +1,7 @@
 module stft
+import jnufft
 
-function tfrstft(x,t=NaN,N=NaN,h=NaN,nwindow=4)
+function tfrstft(x,t=NaN,N=NaN,f=NaN,h=NaN,nwindow=4,silent=0,use_nufft=true)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
@@ -20,7 +21,6 @@ function tfrstft(x,t=NaN,N=NaN,h=NaN,nwindow=4)
         # tau=collect(-minimum([round(N/2)-1,Lh,ti-1]):minimum([round(N/2)-1,Lh,xrow-ti]))
         # indices= rem(N+tau,N)+1; 
         # tfr(indices,icol)=x(ti+tau,1).*conj(h(Lh+1+tau));
-
         taumin=-minimum([floor(N/2)-1,Lh,ti-1])
         taumax=minimum([floor(N/2)-1,Lh,xrow-ti])
         tau=round(Int64,taumin:taumax); indices=round(Int64,rem(N+tau,N)+1)
@@ -28,11 +28,33 @@ function tfrstft(x,t=NaN,N=NaN,h=NaN,nwindow=4)
     end
 
 #    tfr=fft(tfr)
-    for i=1:N
-        tfr[:,i]=fft(tfr[:,i])
+    ###Choose FFT or DFT
+    if isnan(f)[1] 
+        if silent==0 println("Use fft.") end
+        for i=1:N
+            tfr[:,i]=fft(tfr[:,i])
+        end
+        return tfr
+    elseif use_nufft 
+        if silent==0 println("Use nufft.") end
+        Nf=size(f)[1]
+        tfrnew=zeros(Complex64,Nf,N) 
+        for i=1:N
+            tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
+        end        
+        return tfrnew
+    else
+        if silent==0 println("Use Direct DFT.") end
+        Nf=size(f)[1]
+        m=collect(1:N)
+        tfrnew=zeros(Complex64,Nf,N)        
+        for i=1:N
+            for j=1:Nf                
+                tfrnew[j,i]=sum(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
+            end            
+        end
+        return tfrnew
     end
-
-return tfr
 
 end
 end

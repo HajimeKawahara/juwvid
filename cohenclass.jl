@@ -1,7 +1,7 @@
 module cohenclass
 import jnufft
 
-function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,method="mean",use_nufft=true,)
+function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,method="mean",use_nufft=true)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
