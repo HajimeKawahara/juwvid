@@ -1,11 +1,12 @@
 module stft
 
-function tfrstft(x,t=NaN,N=NaN,h=NaN)
+function tfrstft(x,t=NaN,N=NaN,h=NaN,nwindow=4)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
     if isnan(N) N=xrow end
     if isnan(h)[1] 
-        hlength=floor(N/4)
+        hlength=floor(N/nwindow)
+#        hlength=floor(N/4)
         hlength=hlength+1-rem(hlength,2)
         h=0.54 - 0.46*cos(2.0*pi*(1:hlength)/(hlength+1)) #Hamming
     end        

@@ -37,6 +37,7 @@ to generate a shared library file, libnufft.so. Change the path of ccall in jnuf
 - Cross Wigner-Ville distribution  (w/ NUFFT)
 - Pseudo Wigner-Ville distribution (w/ NUFFT and Adaptive Algorithm)
 - Short-time Fourier Transform
+- S-method
 
 #### Examples
 See ipython notebooks

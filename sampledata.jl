@@ -26,6 +26,12 @@ function genstepfm(nsamp=1024,xend=1.0)
     return x, y+iy, iw, ynorm
 end
 
+function genmultifm622(nsamp=512)
+    #Boashash+2015 Example 6.2.2
+    t=collect(linspace(-1.0,1.0,nsamp))
+    x=exp(-t.*t).*cos(25.0*pi*t)+cos(120.0*t.*t.*t+45.0*pi*t)+1.5*exp(-25.0*t.*t).*cos(40.0*pi*t.*t+150.0*pi*t)
+    return t, x
+end
 
 end
 
