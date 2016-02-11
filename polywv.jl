@@ -21,20 +21,22 @@ function tfrpowv(x,y=NaN,t=NaN,f=NaN,nwindow=2,Lp=NaN,Lpsm=4,Lpl2=4,Lppwv=4,sile
         Lpl2=Lp
     end
 
+    nsamplet=length(x)
     #alias free sm
     if isnan(f)[1]
         afwv=smethod.tfrsm(x,Lpsm,NaN,nwindow)
+        nsamplef=nsamplet
     else
         afwv=smethod.tfrsm(x,Lpsm,f,nwindow)
+        nsamplef=length(f)
     end
 
     #L2 wigner
     tfrlw2=lwigner.tfrlw2L(afwv,Lpl2)       
 
     A=0.85/1.35
-    nsamplef=length(x)
-    nsamplet=nsamplef #temp
     tfrpwv=zeros(nsamplef,nsamplet)
+
     for k=1:nsamplef
         for i=-Lp:Lp
             j=round(Int,float(i)/A)
