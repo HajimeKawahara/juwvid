@@ -1,22 +1,22 @@
 module lwigner
 using smethod
 
-function trflw2L(tfr,Lp)
+function tfrlw2L(tfr,Lplw)
 
     nsamplef=size(tfr)[1]
     nsamplet=size(tfr)[2]
-    trflw=zeros(nsamplef,nsamplet)
+    tfrlw=zeros(nsamplef,nsamplet)
 
     for k=1:nsamplef
-        trflw[k,:]=(tfr[k,:].*tfr[k,:])
-        for i=1:Lp
+        tfrlw[k,:]=(tfr[k,:].*tfr[k,:])
+        for i=1:Lplw
             if k+i<=nsamplef && k-i>0
-                trflw[k,:]=trflw[k,:]+2*(tfr[k+i,:].*(tfr[k-i,:]))
+                tfrlw[k,:]=tfrlw[k,:]+2*(tfr[k+i,:].*(tfr[k-i,:]))
             end
         end
     end
 
-    return trflw
+    return tfrlw
 
 end
 
