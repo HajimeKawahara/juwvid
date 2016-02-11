@@ -8,12 +8,17 @@
 
 Julia codes for time-frequency analysis. I started to import the Wigner distribution, the pseudo Wigner distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and have modified them. Regarding tftb, visit http://tftb.nongnu.org/. The modification includes the non-uniform FFT, the adaptive algorithm by Stankovic, Dakovic, Thayaparan 2013, the S-method, the L-Wigner distribution, and the polynomial Wigner-Ville distribution.
 
-#### References 
-- Cohen, L. 1995, Time-Frequency Analysis (PTR-PH)
-- Stankovic, L., Dakovi ́c, M., & Thayaparan, T. 2013, Time-frequency signal analysis with applications (Artech House)
-- Boashash, B. 2015, Time-Frequency Signal Analysis and Processing, 2nd Edition A Comprehensive Reference (Elsevier)
+## Available 
 
-## Requirement
+- Wigner-Ville distribution w/ NUFFT
+- Cross Wigner-Ville distribution w/ NUFFT
+- Pseudo Wigner-Ville distribution w/ NUFFT and Adaptive Algorithm
+- Short-time Fourier Transform w/ NUFFT
+- S-method w/ NUFFT
+- L-Wigner distribution w/ NUFFT
+- polynomial Wigner-Ville distribution w/ NUFFT
+
+## Requirements and Install
 
 - Julia v0.4
 
@@ -40,16 +45,20 @@ make
 
 to generate a shared library file, libnufft.so. Change the path of ccall in jnufft.jl. 
 
-## Available 
+## Tutorials
 
-- Wigner-Ville distribution w/ NUFFT
-- Cross Wigner-Ville distribution w/ NUFFT
-- Pseudo Wigner-Ville distribution w/ NUFFT and Adaptive Algorithm
-- Short-time Fourier Transform w/ NUFFT
-- S-method w/ NUFFT
-- L-Wigner distribution w/ NUFFT
-- polynomial Wigner-Ville distribution w/ NUFFT
+See ipython notebooks in the ipynb directory.
 
-#### Examples
-See ipython notebooks
+- Wigner Ville Distribution with FFT and NUFFT.ipynb
+- Pseudo Wigner Ville Distribution for the nonlinear IF using FFT and NUFFT.ipynb
+- Adaptive algorithm for window selection of the pseudo WV.ipynb
+- S-Method.ipynb
+- S-Method with NuFFT.ipynb
+- L-Wigner Distribution and Polynomial Wigner Ville Distribution.ipynb
+- Polynomial Wigner Ville distribution with NuFFT.ipynb
+
+#### References 
+- Cohen, L. 1995, Time-Frequency Analysis (PTR-PH)
+- Stankovic, L., Dakovi ́c, M., & Thayaparan, T. 2013, Time-frequency signal analysis with applications (Artech House)
+- Boashash, B. 2015, Time-Frequency Signal Analysis and Processing, 2nd Edition A Comprehensive Reference (Elsevier)
 
