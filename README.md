@@ -2,6 +2,10 @@
 
 [![Licence](http://img.shields.io/badge/license-GPLv2-blue.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 
+<img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/polydata.png" Titie="explanation" Width=200px>
+<img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/polywv1.png" Titie="explanation" Width=200px>
+<img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/atfr.png" Titie="explanation" Width=200px>
+
 Julia codes for time-frequency analysis. I started to import the Wigner distribution, the pseudo Wigner distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and have modified them. Regarding tftb, visit http://tftb.nongnu.org/. The modification includes the non-uniform FFT, the adaptive algorithm by Stankovic, Dakovic, Thayaparan 2013, the S-method, the L-Wigner distribution, and the polynomial Wigner-Ville distribution.
 
 #### References 
