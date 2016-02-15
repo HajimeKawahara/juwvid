@@ -1,10 +1,17 @@
 module cohenclass
 import jnufft
 
-function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,method="mean",use_nufft=true)
+function tfrwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,silent=0,method="mean",use_nufft=true)
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
-    if isnan(N) N=xrow end
+    N=xrow
+    if isnan(itc)[1]  
+        Nt=N
+        itc=collect(1:Nt)
+    else
+        Nt=length(itc)
+    end
+
     if isnan(y)[1]
         if silent ==0  println("Single Wigner Ville") end
         y=x
@@ -13,9 +20,10 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,method="mean",use_nufft=true)
         if silent==0 println("Cross Wigner Ville") end
         sw=1
     end
-    tfr=zeros(Complex64,N,N) # plane by default
-    for icol=1:N
-        ti=t[icol]
+    tfr=zeros(Complex64,N,Nt) # plane by default
+    for icol=1:Nt       
+#        ti=t[icol]
+        ti=t[itc[icol]]
         taumax=minimum([ti-1,xrow-ti,round(N/2)-1])
         tau=round(Int64,-taumax:taumax); indices=round(Int64,rem(N+tau,N)+1)
         tfr[indices,icol] = x[ti+tau].*conj(y[ti-tau]) #                
@@ -28,24 +36,24 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,method="mean",use_nufft=true)
     ###Choose FFT or DFT
     if isnan(f)[1] && ismatch(r"mean",method)
         if silent==0 println("Use fft.") end
-        for i=1:N
+        for i=1:Nt
             tfr[:,i]=fft(tfr[:,i])
         end
         return tfr
     elseif use_nufft && ismatch(r"mean",method)
         if silent==0 println("Use nufft.") end
         Nf=size(f)[1]
-        tfrnew=zeros(Complex64,Nf,N) 
-        for i=1:N
+        tfrnew=zeros(Complex64,Nf,Nt) 
+        for i=1:Nt
             tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
         end        
         return tfrnew
     elseif ismatch(r"mean",method)
         if silent==0 println("Use Direct DFT.") end
         Nf=size(f)[1]
-        m=collect(1:N)
-        tfrnew=zeros(Complex64,Nf,N)        
-        for i=1:N
+        m=collect(1:Nt)
+        tfrnew=zeros(Complex64,Nf,Nt)        
+        for i=1:Nt
             for j=1:Nf                
                 tfrnew[j,i]=sum(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
             end            
@@ -54,10 +62,10 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,method="mean",use_nufft=true)
     elseif ismatch(r"median",method)
         if silent==0 println("Robust Wigner distribution") end
         Nf=size(f)[1]
-        m=collect(1:N)
-        tfrnew=zeros(Complex64,Nf,N) 
-        for i=1:N
-            if rem(i,256)==1 println(i,"/",N) end
+        m=collect(1:Nt)
+        tfrnew=zeros(Complex64,Nf,Nt) 
+        for i=1:Nt
+            if rem(i,256)==1 println(i,"/",Nt) end
             for j=1:Nf             
                 arr=real(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
                 arr=arr[arr.>0.0]
@@ -79,11 +87,18 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,N=NaN,silent=0,method="mean",use_nufft=true)
 
 end
 
-function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4,use_nufft=true)
+function tfrpwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,h=NaN,silent=0,method="mean",nwindow=4,use_nufft=true)
     #method = median : robust Wigner distribution
     xrow = size(x)[1] 
     if isnan(t)[1] t=collect(1:xrow) end
-    if isnan(N) N=xrow end
+    N=xrow
+    if isnan(itc)[1]  
+        Nt=N
+        itc=collect(1:Nt)
+    else
+        Nt=length(itc)
+    end
+
     if isnan(y)[1] 
         if silent ==0 println("Single pseudo Wigner Ville") end
         y=x
@@ -101,10 +116,12 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4
     Lh=round(Int,(hrow-1)/2)
     h=h/h[Lh+1]
 
-    tfr=zeros(Complex64,N,N) # plane by default
+    tfr=zeros(Complex64,N,Nt) # plane by default
 
-    for icol=1:N
-        ti=t[icol]
+    for icol=1:Nt
+        #ti=t[icol]
+        ti=t[itc[icol]]
+
         taumax=minimum([ti-1,xrow-ti,round(N/2)-1,Lh])
         tau=round(Int64,-taumax:taumax); indices=round(Int64,rem(N+tau,N)+1)
         tfr[indices,icol] = h[Lh+1+tau].*x[ti+tau].*conj(y[ti-tau])
@@ -116,24 +133,24 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4
 
     if isnan(f)[1] && ismatch(r"mean",method)
         if silent==0 println("Use fft.") end
-        for i=1:N
+        for i=1:Nt
             tfr[:,i]=fft(tfr[:,i])
         end
         return tfr
     elseif use_nufft && ismatch(r"mean",method)
         if silent==0 println("Use nufft.") end
         Nf=size(f)[1]
-        tfrnew=zeros(Complex64,Nf,N) 
-        for i=1:N
+        tfrnew=zeros(Complex64,Nf,Nt) 
+        for i=1:Nt
             tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
         end
         return tfrnew
     elseif ismatch(r"mean",method)
         if silent==0 println("Use dft.") end
         Nf=size(f)[1]
-        m=collect(1:N)
-        tfrnew=zeros(Complex64,Nf,N) 
-        for i=1:N
+        m=collect(1:Nt)
+        tfrnew=zeros(Complex64,Nf,Nt) 
+        for i=1:Nt
             for j=1:Nf                
                 tfrnew[j,i]=sum(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
             end            
@@ -141,10 +158,10 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,N=NaN,h=NaN,silent=0,method="mean",nwindow=4
     elseif ismatch(r"median",method)
         if silent==0 println("Robust pseudo Wigner distribution") end
         Nf=size(f)[1]
-        m=collect(1:N)
-        tfrnew=zeros(Complex64,Nf,N) 
-        for i=1:N
-            if rem(i,256)==1 println(i,"/",N) end
+        m=collect(1:Nt)
+        tfrnew=zeros(Complex64,Nf,Nt) 
+        for i=1:Nt
+            if rem(i,256)==1 println(i,"/",Nt) end
             for j=1:Nf             
                 arr=real(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
                 arr=arr[arr.>0.0]
