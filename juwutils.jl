@@ -14,6 +14,14 @@ function index_to_frequency(indf, fin, dx, nsample)
     return (fin[round(Int,indf)]-offset)*freqfac    
 end
 
+function frequency_to_index(freqarray, dx, nsample)
+    # dx : the size of the time bin (x-axis)
+    # nsample : # of data
+    offset=1    
+    freqfac=1/nsample/dx/2
+    return round(Int,freqarray/freqfac + offset)
+end
+
 function degradexy(x,y,smoothf) 
     nsample=length(y)
     nT=round(Int,nsample/smoothf)
