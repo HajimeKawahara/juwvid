@@ -2,7 +2,7 @@
 
 [![Licence](http://img.shields.io/badge/license-GPLv2-blue.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 
-<img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/polywv1.png" Titie="explanation" Width=200px>
+<img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/polywv.png" Titie="explanation" Width=200px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/atfr.png" Titie="explanation" Width=200px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/ligopwv.png" Titie="explanation" Width=400px>
 
