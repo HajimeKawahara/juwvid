@@ -39,12 +39,11 @@ function throw_intarray(t,lc,dt,offt,fillval=1.0)
     #offt=t[1]
     jend=round(Int,(t[end]-offt)/dt+1.0)
     lcn=ones(jend)*fillval;
-
     for i=1:length(t)
         if !isnan(t[i])    
             x=(t[i]-offt)/dt+1.0
             j=round(Int,x)
-            lcn[j]=lc[i]
+            lcn[j]=lc[i]            
     #println(i,"-",j)
         end
     end
