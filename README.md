@@ -26,13 +26,23 @@ Julia codes for time-frequency analysis. I started to import the Wigner distribu
 
 - DSP
 - PyPlot
-- Jupyter (just for tutorials)
+- Distributions, IJulia (just for tutorials)
 
 To install, use Pkg.add in the julia console, such as
 
 ```
 Pkg.add("DSP")
 ```
+
+Set JULIA_LOAD_PATH as 
+```
+setenv JULIA_LOAD_PATH /Users/kawahara/juwvid
+```
+for csh/tcsh or 
+```
+export JULIA_LOAD_PATH=/Users/kawahara/juwvid
+```
+for bash. 
 
 #### Julia Bindings of non-uniform FFT (NUFFT)
 
