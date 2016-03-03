@@ -26,7 +26,7 @@ Julia codes for time-frequency analysis. I started to import the Wigner distribu
 
 - DSP
 - PyPlot
-- Jupyter, Winston, Color (these are just for tutorials)
+- Jupyter (just for tutorials)
 
 To install, use Pkg.add in the julia console, such as
 
