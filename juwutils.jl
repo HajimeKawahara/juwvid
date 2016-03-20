@@ -1,26 +1,47 @@
 module juwutils
 
-function index_to_frequency(indf, fin, dx, nsample)
+function index_to_frequency(indf, fin, dx, nsample, nft=NaN, finend=NaN,fin1=NaN)
     # indf : indices
     # fin : 
     # dx : the size of the time bin (x-axis)
     # nsample : # of data
-    if isnan(fin[1])
-        fin=collect(1:length(indf))
+    # nft : # of frequency bins
+
+#    if isnan(fin[1])
+#        fin=collect(1:length(indf))
+#    end
+    if isnan(nft)
+        nft=nsample
+        println("Assuming nft = nsample.")
     end
 
-    offset=(fin[end]-fin[1])/nsample
     freqfac=1/nsample/dx/2
-    return (fin[round(Int,indf)]-offset)*freqfac    
+    if isnan(fin[1])
+        offset=(finend-fin1)/nsample
+        return (indf-offset)*freqfac    
+    else
+#        offset=(fin[end]-fin[1])/nsample
+        offset=(fin[end]-fin[1])/nft
+        return (fin[round(Int,indf)]-offset)*freqfac    
+    end
 end
 
-function frequency_to_index(freqarray, dx, nsample)
+function frequency_to_index(freqarray, dx, nsample, nft=NaN)
     # dx : the size of the time bin (x-axis)
     # nsample : # of data
-    offset=1    
+    # nft : # of frequency bins
+
+    if isnan(nft)
+        nft=nsample
+        println("Assuming nft = nsample.")
+    end
+
+    offset=abs(freqarray[2]-freqarray[1])/nft
     freqfac=1/nsample/dx/2
-    return round(Int,freqarray/freqfac + offset)
+#    return round(Int,freqarray/freqfac + offset)
+    return freqarray/freqfac + offset
 end
+
 
 function degradexy(x,y,smoothf) 
     nsample=length(y)
