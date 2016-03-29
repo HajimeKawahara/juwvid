@@ -121,9 +121,9 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,h=NaN,silent=0,method="mean",nwindow
     for icol=1:Nt
         #ti=t[icol]
         ti=t[itc[icol]]
-
         taumax=minimum([ti-1,xrow-ti,round(N/2)-1,Lh])
-        tau=round(Int64,-taumax:taumax); indices=round(Int64,rem(N+tau,N)+1)
+        tau=round(Int64,-taumax:taumax); 
+        indices=round(Int64,rem(N+tau,N)+1)
         tfr[indices,icol] = h[Lh+1+tau].*x[ti+tau].*conj(y[ti-tau])
         tau=round(N/2); 
         if ti<=xrow-tau && ti>=tau+1 && tau<=Lh
@@ -142,7 +142,7 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,h=NaN,silent=0,method="mean",nwindow
         Nf=size(f)[1]
         tfrnew=zeros(Complex64,Nf,Nt) 
         for i=1:Nt
-            tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
+                tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
         end
         return tfrnew
     elseif ismatch(r"mean",method)
