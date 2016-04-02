@@ -1,4 +1,4 @@
-FC=/usr/local/bin/gfortran
+FC=/usr/bin/gfortran
 FFLAGS=-fPIC -O3
 OBJS=nufft_src/nufft1df90.o nufft_src/dirft1d.o nufft_src/dfftpack.o nufft_src/next235.o
 

@@ -17,6 +17,8 @@ function index_to_frequency(indf, fin, dx, nsample, nft=NaN, finend=NaN,fin1=NaN
 
     freqfac=1/nsample/dx/2
     if isnan(fin[1])
+        if isnan(fin1) fin1 = 1.0 end
+        if isnan(finend) finend= nsample end
         offset=(finend-fin1)/nsample
         return (indf-offset)*freqfac    
     else
