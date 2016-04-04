@@ -8,7 +8,8 @@ function maxif(tfr,isf=NaN,ief=NaN)
     indf=zeros(nt)
     ifreq=collect(isf:ief)
     for it=1:nt
-        i=indmax(abs(tfr[isf:ief,it]))
+#        i=indmax(abs(tfr[isf:ief,it]))
+        i=indmax(real(tfr[isf:ief,it]))
         indf[it]=real(ifreq[i])
     end 
     
