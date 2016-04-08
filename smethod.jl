@@ -1,15 +1,18 @@
 module smethod
 using stft 
 
-function tfrsm(x,Lp,f=NaN,nwindow=4,fps=NaN,fpe=NaN)
+function tfrsm(x,Lp,f=NaN,nwindow=4,fps=NaN,fpe=NaN,itc=NaN)
 
     #fps: pick-up frequency (start)
     #fpe: pick-up frequency (end)
+    if isnan(itc)[1]  
+        itc=collect(1:length(x))
+    end
 
-    if isnan(f)[1] 
-        tfrstft=stft.tfrstft(x,NaN,NaN,NaN,NaN,nwindow)    
+    if isnan(f)[1]  
+        tfrstft=stft.tfrstft(x,NaN,NaN,NaN,itc,NaN,nwindow)    
     else
-        tfrstft=stft.tfrstft(x,NaN,NaN,f,NaN,nwindow)            
+        tfrstft=stft.tfrstft(x,NaN,NaN,f,itc,NaN,nwindow)            
     end
 
     nsamplef=size(tfrstft)[1]
