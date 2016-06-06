@@ -1,12 +1,22 @@
 module sampledata
 
-function genfm(nsamp,wp=1.0,wf=0.01,s=1.0, xend=100*pi)
+function genfm(nsamp,wp=1.0,wf=0.01,s=1.0,xend=100*pi)
     x=linspace(0.0,xend,nsamp)
     y=cos(wp*x+s*sin(wf*x))
     iw=wp+s*wf*cos(wf*x)
     ynorm=pi/x[end]
     return x, y, iw, ynorm
 end
+
+function genfmX(nsamp,Fp=1.0,Ff=0.01,amp=0.01,xend=100*pi)
+    #amp [fm fraction]
+    x=linspace(0.0,xend,nsamp)
+    y=cos(2.0*pi*Fp*x+amp*Fp/Ff*sin(2.0*pi*Ff*x))
+    iF=Fp+amp*Fp*cos(2.0*pi*Ff*x)
+    ynorm=pi/x[end]
+    return x, y, iF, ynorm
+end
+
 
 function genlinfm(nsamp,wp=1.0,s=0.01, xend=100*pi)
     x=linspace(0.0,xend,nsamp)
