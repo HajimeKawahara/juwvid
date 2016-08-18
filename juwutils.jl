@@ -1,6 +1,6 @@
 module juwutils
 
-function index_to_frequency(indf, fin, dx, nsample, nft=NaN, finend=NaN,fin1=NaN)
+function index_to_frequency(indf, fin, dx, nsample, nft=NaN, finend=NaN,fin1=NaN, Nz=NaN)
     # indf : indices
     # fin : 
     # dx : the size of the time bin (x-axis)
@@ -16,11 +16,17 @@ function index_to_frequency(indf, fin, dx, nsample, nft=NaN, finend=NaN,fin1=NaN
     end
 
     freqfac=1/nsample/dx/2
-    if isnan(fin[1])
+    if isnan(fin[1]) 
         if isnan(fin1) fin1 = 1.0 end
         if isnan(finend) finend= nsample end
-        offset=(finend-fin1)/nsample
-        return (indf-offset)*freqfac    
+        if isnan(Nz)
+            offset=(finend-fin1)/nsample
+            return (indf-offset)*freqfac    
+        else 
+            offset=(finend-fin1)/nsample
+            return (indf+round(Int,fin1*Nz)-1-offset)*freqfac/Nz
+
+        end
     else
 #        offset=(fin[end]-fin[1])/nsample
         offset=(fin[end]-fin[1])/nft

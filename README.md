@@ -3,18 +3,17 @@
 [![Licence](http://img.shields.io/badge/license-GPLv2-blue.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 [![arXiv](http://img.shields.io/badge/arXiv-1603.02898-green.svg?style=flat)](http://arxiv.org/abs/1603.02898)
 
-
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/polywv.png" Titie="explanation" Width=200px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/atfr.png" Titie="explanation" Width=200px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/ligopwv.png" Titie="explanation" Width=400px>
 
-Julia codes for time-frequency analysis. I started to import the Wigner distribution, the pseudo Wigner distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and have modified them. Regarding tftb, visit http://tftb.nongnu.org/. The modification includes the non-uniform FFT, the adaptive algorithm by Stankovic, Dakovic, Thayaparan 2013, the S-method, the L-Wigner distribution, and the polynomial Wigner-Ville distribution. Juwvid was originally developed for my paper, [Kawahara (2016)](http://arxiv.org/abs/1603.02898).
+Julia codes for time-frequency analysis. I started to import the Wigner distribution, the pseudo Wigner distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and have modified them. Regarding tftb, visit http://tftb.nongnu.org/. The modification includes the zero-padding FFT, the non-uniform FFT, the adaptive algorithm by Stankovic, Dakovic, Thayaparan 2013, the S-method, the L-Wigner distribution, and the polynomial Wigner-Ville distribution. Juwvid was originally developed for my paper, [Kawahara (2016)](http://arxiv.org/abs/1603.02898).
 
 ## Available 
 
 - Wigner-Ville distribution w/ NUFFT
 - Cross Wigner-Ville distribution w/ NUFFT
-- Pseudo Wigner-Ville distribution w/ NUFFT and Adaptive Algorithm
+- Pseudo Wigner-Ville distribution w/ zero-padding FFT and NUFFT and Adaptive Algorithm
 - Short-time Fourier Transform w/ NUFFT
 - S-method w/ NUFFT
 - L-Wigner distribution w/ NUFFT
@@ -62,7 +61,7 @@ to generate a shared library file, libnufft.so. Change the path of ccall in jnuf
 
 See ipython notebooks in the ipynb directory.
 
-- Wigner Ville Distribution with FFT and NUFFT.ipynb
+- Wigner Ville Distribution with FFT, zero-padding FFT, and NUFFT.ipynb
 - Pseudo Wigner Ville Distribution for the nonlinear IF using FFT and NUFFT.ipynb
 - Adaptive algorithm for window selection of the pseudo WV.ipynb
 - S-Method.ipynb
