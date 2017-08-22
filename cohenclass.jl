@@ -162,6 +162,14 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,h=NaN,silent=0,method="fft",nwindow=
                 tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
         end
         return tfrnew
+    elseif ismatch(r"nufft",method)
+        if silent==0 println("Use nufft.") end
+        Nf=size(f)[1]
+        tfrnew=zeros(Complex64,Nf,Nt) 
+        for i=1:Nt
+                tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
+        end
+        return tfrnew
     elseif ismatch(r"fft",method) 
         if silent==0 println("Use fft.") end
         for i=1:Nt
@@ -185,14 +193,6 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,h=NaN,silent=0,method="fft",nwindow=
             paddata=vcat(tfr[1:Nh-1,i],zeros(Complex64,(Nz-1)*Nt))
             paddata=vcat(paddata,tfr[Nh:Nt,i])
             tfrnew[:,i]=fft(paddata)[ifs:ife]
-        end
-        return tfrnew
-    elseif ismatch(r"nufft",method)
-        if silent==0 println("Use nufft.") end
-        Nf=size(f)[1]
-        tfrnew=zeros(Complex64,Nf,Nt) 
-        for i=1:Nt
-                tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
         end
         return tfrnew
     elseif ismatch(r"dft",method)

@@ -31,7 +31,7 @@ function call_ionufft1d2(xj,fk,iflag=-1,eps=10.0^-24)
     end
 
     #(nj,ms,mx,iflag,eps,xj,fk,cj)
-    product = ccall((:__ionufft_MOD_ionufft1d2, "/Users/kawahara/juwvid/libnufft.so"),Int32,(Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Float64},Ptr{Float64},Ptr{Complex128},Ptr{Complex128}),&nj,&ms,&mx,&iflag,&eps,xj0,fk0,cj)
+    product = ccall((:__ionufft_MOD_ionufft1d2, "/home/kawahara/juwvid/libnufft.so"),Int32,(Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Float64},Ptr{Float64},Ptr{Complex128},Ptr{Complex128}),&nj,&ms,&mx,&iflag,&eps,xj0,fk0,cj)
 #    return cj[1:ms]
     return unshift!(cj[1:mx-1], cj[nj])    
 end
@@ -68,7 +68,7 @@ function call_ionufft1d3(sk,xj,cj,iflag=-1,eps=10.0^-24)
     end
 
     #ionufft1d3(nj,nk,iflag,eps,xj,sk,cj,fk)
-    product = ccall((:__ionufft_MOD_ionufft1d3, "/Users/kawahara/juwvid/libnufft.so"),Int32,(Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Float64},Ptr{Float64},Ptr{Float64},Ptr{Complex128},Ptr{Complex128}),&nj,&nk,&iflag,&eps,xj0,sk0,cj0,fk)
+    product = ccall((:__ionufft_MOD_ionufft1d3, "/home/kawahara/juwvid/libnufft.so"),Int32,(Ptr{Int32},Ptr{Int32},Ptr{Int32},Ptr{Float64},Ptr{Float64},Ptr{Float64},Ptr{Complex128},Ptr{Complex128}),&nj,&nk,&iflag,&eps,xj0,sk0,cj0,fk)
     
     return unshift!(fk[1:nk-1], fk[nk])
 
