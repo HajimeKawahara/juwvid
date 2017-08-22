@@ -48,12 +48,7 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,silent=0,method="mean",use_nufft=true
             tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
         end        
         return tfrnew
-    elseif isnan(f)[1] && ismatch(r"fft",method)
-        if silent==0 println("Use fft.") end
-        for i=1:Nt
-            tfr[:,i]=fft(tfr[:,i])
-        end
-        return tfr
+	
     elseif ismatch(r"nufft",method)
         if silent==0 println("Use nufft.") end
         Nf=size(f)[1]
@@ -62,6 +57,13 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,silent=0,method="mean",use_nufft=true
             tfrnew[:,i]=jnufft.call_ionufft1d2(f,tfr[:,i],-1,10.0^-28)[1:Nf]
         end        
         return tfrnew
+
+    elseif isnan(f)[1] && ismatch(r"fft",method)
+        if silent==0 println("Use fft.") end
+        for i=1:Nt
+            tfr[:,i]=fft(tfr[:,i])
+        end
+        return tfr
 
     elseif ismatch(r"dft",method)
         if silent==0 println("Use Direct DFT.") end
