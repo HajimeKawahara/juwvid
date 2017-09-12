@@ -8,7 +8,7 @@
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/smnufft.png" Titie="explanation" Width=200px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/ligopwv.png" Titie="explanation" Width=400px>
 
-Julia codes for time-frequency analysis. I started to import the Wigner distribution, the pseudo Wigner distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and have modified them. Regarding tftb, visit http://tftb.nongnu.org/. The modification includes the zero-padding FFT, the non-uniform FFT, the adaptive algorithm by Stankovic, Dakovic, Thayaparan 2013, the S-method, the L-Wigner distribution, and the polynomial Wigner-Ville distribution. Juwvid was originally developed for my paper, [Kawahara (2016)](http://arxiv.org/abs/1603.02898).
+Julia codes for time-frequency analysis. I started to import the Wigner distribution, the pseudo Wigner distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and modified them and added other techniques. Regarding tftb, visit http://tftb.nongnu.org/. The modification and new additions include the zero-padding FFT, the non-uniform FFT, the adaptive algorithm by Stankovic, Dakovic, Thayaparan 2013, the S-method, the L-Wigner distribution, the polynomial Wigner-Ville distribution, extraction of instantaneous frequency, and mode tracking. Juwvid was originally developed for my paper, [Kawahara (2016)](http://arxiv.org/abs/1603.02898).
 
 ## Available 
 
