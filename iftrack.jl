@@ -1,5 +1,5 @@
-module weightif
-#extract weighted instant frequency
+module iftrack
+# Instantaneous Frequency Tracking
 
 function iterate_mcif(timeseq,htwindow,hfwindow,iguess,tfr,prec)
     iseq=Int64[]
