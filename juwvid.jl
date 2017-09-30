@@ -12,4 +12,10 @@ import smethod
 import stft
 import juwplot
 import pm
+
+if VERSION < v"0.6-"
+    println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    println("You use unsupported version of julia for juwvid. Update julia.")
+    println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+end
 end

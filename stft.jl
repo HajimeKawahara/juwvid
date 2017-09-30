@@ -3,25 +3,25 @@ import jnufft
 
 function tfrstft(x,t=NaN,N=NaN,f=NaN,itc=NaN,h=NaN,nwindow=4,silent=0,use_nufft=true)
     xrow = size(x)[1] 
-    if isnan(t)[1] t=collect(1:xrow) end
-    if isnan(N) N=xrow end
+    if isnan.(t)[1] t=collect(1:xrow) end
+    if isnan.(N) N=xrow end
 
-    if isnan(itc)[1]  
+    if isnan.(itc)[1]  
         Nt=N
         itc=collect(1:Nt)
     else
         Nt=length(itc)
     end
 
-    if isnan(h)[1] 
+    if isnan.(h)[1] 
         hlength=floor(N/nwindow)
 #        hlength=floor(N/4)
-        hlength=hlength+1-rem(hlength,2)
-        h=0.54 - 0.46*cos(2.0*pi*(1:hlength)/(hlength+1)) #Hamming
+        hlength=hlength+1-rem.(hlength,2)
+        h=0.54 - 0.46*cos.(2.0*pi*(1:hlength)/(hlength+1)) #Hamming
     end        
     h=h/norm(h)
     hrow=length(h)
-    Lh=round(Int64,(hrow-1)/2) ##??
+    Lh=round.(Int64,(hrow-1)/2) ##??
 
     tfr=zeros(Complex64,N,Nt) # plane by default
     for icol=1:Nt       
@@ -29,14 +29,14 @@ function tfrstft(x,t=NaN,N=NaN,f=NaN,itc=NaN,h=NaN,nwindow=4,silent=0,use_nufft=
         ti=t[itc[icol]]
         taumin=-minimum([floor(N/2)-1,Lh,ti-1])
         taumax=minimum([floor(N/2)-1,Lh,xrow-ti])
-        tau=round(Int64,taumin:taumax)
-        indices=round(Int64,rem(N+tau,N)+1)
+        tau=round.(Int64,taumin:taumax)
+        indices=round.(Int64,rem.(N+tau,N)+1)
         tfr[indices,icol] = x[ti+tau].*conj(h[Lh+1+tau])
     end
 
 #    tfr=fft(tfr)
     ###Choose FFT or DFT
-    if isnan(f)[1] 
+    if isnan.(f)[1] 
         if silent==0 println("Use fft.") end
         for i=1:Nt
             tfr[:,i]=fft(tfr[:,i])

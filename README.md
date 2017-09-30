@@ -22,7 +22,7 @@ Julia codes for time-frequency analysis. I started to import the Wigner distribu
 
 ## Requirements and Install
 
-- Julia v0.4
+- Julia v0.6 (VERSION<0.6 does not work now.)
 
 #### Julia Packages 
 
@@ -57,6 +57,12 @@ make
 ```
 
 to generate a shared library file, libnufft.so. Change the path of ccall in jnufft.jl. 
+
+#### Features
+
+- Various TFDs
+- Dense frequency sampling using NUFFT
+- Thinning out the time grid for large dataset
 
 ## Tutorials
 

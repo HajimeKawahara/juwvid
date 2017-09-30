@@ -44,6 +44,7 @@ function wtfrshow(tfrs,dx,x1,xend,fin1=NaN,finend=NaN,asp=0.7,cmap="CMRmap",vmin
     return a
 end
 
+
 function tfrshow_manual(tfrs,dx,x1,xend,f1,fe,asp=0.7,cmap="CMRmap",vmin=NaN,vmax=NaN)
 
     if isnan(vmin) || isnan(vmax)
