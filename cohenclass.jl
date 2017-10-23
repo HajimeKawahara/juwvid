@@ -1,9 +1,8 @@
 module cohenclass
 import jnufft
 
-function tfrwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,silent=0,method="mean",use_nufft=true)
+function tfrwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,silent=0,method="mean")
     xrow = size(x)[1] 
-
     if isnan.(t)[1] t=collect(1:xrow) end
     N=xrow
     if isnan.(itc)[1]  
@@ -86,9 +85,11 @@ function tfrwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,silent=0,method="mean",use_nufft=true
         for i=1:Nt
             if rem.(i,256)==1 println(i,"/",Nt) end
             for j=1:Nf             
-                arr=real(tfr[:,i].*exp(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
+                arr=real(tfr[:,i].*exp.(-2.0*pi*im*(m[:]-1)*(f[j]-1)/N))
                 arr=arr[arr.>0.0]
-                tfrnew[j,i]=median(arr)
+                if length(arr) > 0
+                    tfrnew[j,i]=median(arr)
+                end
             end            
         end
         return tfrnew
@@ -211,6 +212,9 @@ function tfrpwv(x,y=NaN,t=NaN,f=NaN,itc=NaN,h=NaN,silent=0,method="fft",nwindow=
         end
     elseif ismatch(r"robust",method)
         if silent==0 println("Robust pseudo Wigner distribution") end
+        if isnan.(f)[1] 
+            f=collect(linspace(1,Nt,Nt))
+        end
         Nf=size(f)[1]
         m=collect(1:Nt)
         tfrnew=zeros(Complex64,Nf,Nt) 
