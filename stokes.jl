@@ -67,10 +67,10 @@ end
 
 function smstokes(y1,y2,Lp=6,f=NaN,silent=0,nwindow=4,fps=NaN,fpe=NaN,itc=NaN,def="wolf")
     #Stokes Distribution for S-method
-    sm11=smethod.tfrsm(y1,NaN,Lp,f,silent,nwindow,fps,fpe,itc)
-    sm22=smethod.tfrsm(y2,NaN,Lp,f,silent,nwindow,fps,fpe,itc)
-    sm12=smethod.tfrsm(y2,y1,Lp,f,silent,nwindow,fps,fpe,itc)
-    sm21=smethod.tfrsm(y1,y2,Lp,f,silent,nwindow,fps,fpe,itc)
+    sm11=smethod.tfrsmc(y1,NaN,Lp,f,nwindow,silent,fps,fpe,itc)
+    sm22=smethod.tfrsmc(y2,NaN,Lp,f,nwindow,silent,fps,fpe,itc)
+    sm12=smethod.tfrsmc(y2,y1,Lp,f,nwindow,silent,fps,fpe,itc)
+    sm21=smethod.tfrsmc(y1,y2,Lp,f,nwindow,silent,fps,fpe,itc)
     if def == "wolf"
         I,Q,U,V=get_StokesTFR(sm11,sm22,sm12,sm21)
     elseif def == "LR"

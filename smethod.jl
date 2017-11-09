@@ -1,8 +1,10 @@
 module smethod
 using stft 
 
-function tfrsm(x,y=NaN,Lp=6,f=NaN,silent=0,nwindow=4,fps=NaN,fpe=NaN,itc=NaN)
-    #cross S-method
+
+function tfrsm(x,y=NaN,Lp=6,f=NaN,nwindow=4,silent=0,fps=NaN,fpe=NaN,itc=NaN)
+    #
+    #normal/cross S-method
     #fps: pick-up frequency (start)
     #fpe: pick-up frequency (end)
     if isnan.(y)[1]
@@ -52,7 +54,7 @@ function tfrsm(x,y=NaN,Lp=6,f=NaN,silent=0,nwindow=4,fps=NaN,fpe=NaN,itc=NaN)
         sm[kq,:]=(tfrstftx[k,:].*conj(tfrstfty[k,:]))
         for i=1:Lp
             if k+i<=nsamplef && k-i>0
-                sm[kq,:]=sm[kq,:]+2*(tfrstftx[k+i,:].*conj(tfrstfty[k-i,:]))
+                sm[kq,:]=sm[kq,:]+(tfrstftx[k+i,:].*conj(tfrstfty[k-i,:])+tfrstftx[k-i,:].*conj(tfrstfty[k+i,:]))
             end
         end
     end
@@ -61,9 +63,8 @@ function tfrsm(x,y=NaN,Lp=6,f=NaN,silent=0,nwindow=4,fps=NaN,fpe=NaN,itc=NaN)
 end
 
 
-#######OLD, will be removed ##########
-function tfrsm_old(x,Lp,f=NaN,nwindow=4,fps=NaN,fpe=NaN,itc=NaN)
-    #old form of S-method
+function tfrsm_single(x,Lp,f=NaN,nwindow=4,fps=NaN,fpe=NaN,itc=NaN)
+    #only for single S-method (but, a bit faster)
     #fps: pick-up frequency (start)
     #fpe: pick-up frequency (end)
     if isnan.(itc)[1]  
