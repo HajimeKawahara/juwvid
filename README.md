@@ -19,6 +19,7 @@ Julia codes for time-frequency analysis. I started to import the Wigner distribu
 - S-method w/ NUFFT
 - L-Wigner distribution w/ NUFFT
 - polynomial Wigner-Ville distribution w/ NUFFT
+- Stokes parameters (under development) 
 
 ## Requirements and Install
 
