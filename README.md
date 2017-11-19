@@ -64,6 +64,7 @@ to generate a shared library file, libnufft.so. Change the path of ccall in jnuf
 - Various TFDs
 - Dense frequency sampling using NUFFT
 - Thinning out the time grid for large dataset
+- TFD for polarization (under development)
 
 ## Tutorials
 
