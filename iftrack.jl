@@ -1,5 +1,6 @@
 module iftrack
 import juwutils
+
 # Instantaneous Frequency Tracking
 
 function iterate_mcif(timeseq,htwindow,hfwindow,iguess,tfr,prec=1)
@@ -56,6 +57,30 @@ function track_mode(tfr,t,tinit,finit,tend,windowdf,tfrmode=2,rev=0,nthin=10,htw
     timeseq,iseq=iftrack.iterate_mcif(timeseq,htwindow,hfwindow,iguess,tfr);
     fx=juwutils.index_to_frequency(iseq.*tfrmode,NaN,dt,nsample);
     return t[timeseq],fx
+end
+
+function get_poltrack(timeseq,iseq,I,Q,U,V)
+    #polarization tracking
+    #tip=3
+    nv=size(I)[1]
+    n=length(iseq)
+    Ival=zeros(n);Qval=zeros(n);Uval=zeros(n);Vval=zeros(n);
+    for i=1:n
+        it=timeseq[i]
+        jt=iseq[i]
+        Ival[i]=I[jt,it]
+        Qval[i]=Q[jt,it]
+        Uval[i]=U[jt,it]
+        Vval[i]=V[jt,it]
+        #for kk=maximum([jt-tip,1]):minimum([nv,jt+tip])
+        #    Ival[i]+=I[kk,it]
+        #    Qval[i]+=Q[kk,it]
+        #    Uval[i]+=U[kk,it]
+        #    Vval[i]+=V[kk,it]
+        #end
     end
+    return Ival,Qval,Uval,Vval
+end
 
 end
+
