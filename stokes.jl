@@ -20,10 +20,28 @@ function get_StokesTFR_LR(W11,W22,W12,W21)
     return I,Q,U,V
 end
 
+function spstokes(y1,y2,t=NaN,f=NaN,itc=NaN,silent=0,method="mean",def="wolf")
+    #Stokes Distribution for a spectrogram
+    z1=stft.tfrstft(y1);
+    z2=stft.tfrstft(y2);
+    W11=z1.*conj(z1)
+    W22=z2.*conj(z2)
+    W12=z2.*conj(z1)
+    W21=z1.*conj(z2)
+
+    if def == "wolf"
+        I,Q,U,V=get_StokesTFR(W11,W22,W12,W21)
+    elseif def == "LR"
+        I,Q,U,V=get_StokesTFR_LR(W11,W22,W12,W21)
+    end
+
+    return I,Q,U,V
+end
+
 
 
 function wvstokes(y1,y2,t=NaN,f=NaN,itc=NaN,silent=0,method="mean",def="wolf")
-    #Stokes Distribution for Wigner Ville Distribution
+    #Stokes Distribution for the Wigner Ville Distribution
     z1=DSP.Util.hilbert(y1)
     z2=DSP.Util.hilbert(y2)
 
