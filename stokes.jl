@@ -20,10 +20,10 @@ function get_StokesTFR_LR(W11,W22,W12,W21)
     return I,Q,U,V
 end
 
-function spstokes(y1,y2,t=NaN,f=NaN,itc=NaN,silent=0,method="mean",def="wolf")
+function spstokes(y1,y2,t=NaN,N=NaN,f=NaN,itc=NaN,h=NaN,nwindow=4,silent=0,method="mean",def="wolf")
     #Stokes Distribution for a spectrogram
-    z1=stft.tfrstft(y1);
-    z2=stft.tfrstft(y2);
+    z1=stft.tfrstft(y1,t,N,f,itc,h,nwindow,silent);
+    z2=stft.tfrstft(y2,t,N,f,itc,h,nwindow,silent);
     W11=z1.*conj(z1)
     W22=z2.*conj(z2)
     W12=z2.*conj(z1)

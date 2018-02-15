@@ -24,10 +24,10 @@ function tfrpowv(x,y=NaN,t=NaN,f=NaN,nwindow=2,Lp=NaN,Lpsm=4,Lpl2=4,Lppwv=4,sile
     nsamplet=length(x)
     #alias free sm
     if isnan.(f)[1]
-        afwv=smethod.tfrsm(x,Lpsm,NaN,nwindow)
+        afwv=smethod.tfrsm(x,NaN,Lpsm,NaN,nwindow)
         nsamplef=nsamplet
     else
-        afwv=smethod.tfrsm(x,Lpsm,f,nwindow)
+        afwv=smethod.tfrsm(x,NaN,Lpsm,f,nwindow)
         nsamplef=length(f)
     end
 
