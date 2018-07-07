@@ -5,7 +5,7 @@
 [![ascl](http://img.shields.io/badge/ascl-1702.003-red.svg?style=flat)](http://ascl.net/1702.003)
 
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/nufft.png" Titie="explanation" Width=800px>
-<img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/smnufft.png" Titie="explanation" Width=200px>
+<img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/smnufft.png" Titie="explanation" Width=400px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/input.png" Titie="explanation" Width=800px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/SSD.png" Titie="explanation" Width=800px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/ligopwv.png" Titie="explanation" Width=800px>
