@@ -7,9 +7,10 @@
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/nufft.png" Titie="explanation" Width=400px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/smnufft.png" Titie="explanation" Width=200px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/SSD.png" Titie="explanation" Width=200px>
+<img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/input.png" Titie="explanation" Width=400px>
 <img src="https://github.com/HajimeKawahara/juwvid/blob/master/figure/ligopwv.png" Titie="explanation" Width=400px>
 
-Julia codes for time-frequency analysis. I started to import the Wigner distribution, the pseudo Wigner distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and modified them and added other techniques. Regarding tftb, visit http://tftb.nongnu.org/. The modification and new additions include the zero-padding FFT, the non-uniform FFT, the adaptive algorithm by Stankovic, Dakovic, Thayaparan 2013, the S-method, the L-Wigner distribution, the polynomial Wigner-Ville distribution, extraction of instantaneous frequency, mode tracking, TFAs of the Stokes parameters for the spectrogram, the Wigner-Ville distribution, the S-method. Juwvid was originally developed for my paper, [Kawahara (2016)](http://arxiv.org/abs/1603.02898).
+Julia codes for time-frequency analysis. I started to import the Wigner distribution, the pseudo Wigner distribution, and the short-time Fourier transform from MATLAB GPL programs, tftb-0.2 and modified them and added other techniques. Regarding tftb, visit http://tftb.nongnu.org/. The modification and new additions include the zero-padding FFT, the non-uniform FFT, the adaptive algorithm by Stankovic, Dakovic, Thayaparan 2013, the S-method, the L-Wigner distribution, the polynomial Wigner-Ville distribution, extraction of instantaneous frequency, mode tracking, time-frequency distributions of the Stokes parameters for the spectrogram, the Wigner-Ville distribution, the S-method. Juwvid was originally developed for my paper, [Kawahara (2016)](http://arxiv.org/abs/1603.02898).
 
 ## Available 
 
@@ -68,7 +69,7 @@ to generate a shared library file, libnufft.so. Change the path of ccall in jnuf
 - Various TFDs
 - Dense frequency sampling using NUFFT
 - Thinning out the time grid for large dataset
-- TFD for polarization (under development)
+- TFDs for polarization
 
 ## Tutorials
 
@@ -81,7 +82,9 @@ See ipython notebooks in the ipynb directory.
 - S-Method with NuFFT.ipynb
 - L-Wigner Distribution and Polynomial Wigner Ville Distribution.ipynb
 - Polynomial Wigner Ville distribution with NuFFT.ipynb
+- Stokes Distribution.ipynb
 - Application to LIGO data.ipynb [PDF](https://github.com/HajimeKawahara/juwvid/blob/master/documents/Application\ to\ LIGO\ data.pdf)
+
 
 #### References 
 - Cohen, L. 1995, Time-Frequency Analysis (PTR-PH)
