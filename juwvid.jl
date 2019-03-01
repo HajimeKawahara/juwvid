@@ -13,7 +13,6 @@ import stft
 import juwplot
 import pm
 import iftrack
-import gensample
 import stokes
 
 if VERSION < v"0.6-"
